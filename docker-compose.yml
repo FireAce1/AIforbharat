@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: timescale/timescaledb:latest-pg14
+    container_name: krishiai-postgres
+    environment:
+      POSTGRES_USER: krishiai
+      POSTGRES_PASSWORD: krishiai_dev_password
+      POSTGRES_DB: krishiai_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U krishiai"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - krishiai-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: krishiai-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --requirepass krishiai_redis_password
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - krishiai-network
+
+  mongodb:
+    image: mongo:6
+    container_name: krishiai-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: krishiai
+      MONGO_INITDB_ROOT_PASSWORD: krishiai_mongo_password
+      MONGO_INITDB_DATABASE: krishiai_logs
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - krishiai-network
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: krishiai-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: krishiai
+      RABBITMQ_DEFAULT_PASS: krishiai_rabbitmq_password
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - krishiai-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  mongodb_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+
+networks:
+  krishiai-network:
+    driver: bridge
