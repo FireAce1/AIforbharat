@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: krishiai-config
+  namespace: default
+data:
+  # Database Configuration
+  DB_HOST: "postgres-service"
+  DB_PORT: "5432"
+  DB_NAME: "krishiai_db"
+  
+  # Redis Configuration
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+  
+  # Service URLs
+  AUTH_SERVICE_URL: "http://auth-service:3000"
+  CROP_SERVICE_URL: "http://crop-service:8000"
+  MARKET_SERVICE_URL: "http://market-service:3001"
+  CLIMATE_SERVICE_URL: "http://climate-service:3002"
+  GOVT_SERVICE_URL: "http://govt-service:3003"
+  
+  # Application Configuration
+  NODE_ENV: "production"
+  LOG_LEVEL: "info"
+  
+  # API Configuration
+  API_VERSION: "v1"
+  API_TIMEOUT: "30000"
+  
+  # Cache Configuration
+  CACHE_TTL_OTP: "300"
+  CACHE_TTL_API: "3600"
+  CACHE_TTL_SESSION: "604800"
+  
+  # Rate Limiting
+  RATE_LIMIT_OTP: "5"
+  RATE_LIMIT_API: "1000"
+  RATE_LIMIT_ML: "50"
+  
+  # JWT Configuration
+  JWT_EXPIRY: "7d"
+  
+  # External APIs
+  IMD_API_URL: "https://api.imd.gov.in"
+  AGMARKNET_API_URL: "https://api.agmarknet.gov.in"

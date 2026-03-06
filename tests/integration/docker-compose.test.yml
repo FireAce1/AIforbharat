@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # Test PostgreSQL database
+  postgres-test:
+    image: timescale/timescaledb:latest-pg14
+    container_name: krishiai-postgres-test
+    environment:
+      POSTGRES_USER: krishiai_test
+      POSTGRES_PASSWORD: test_password_123
+      POSTGRES_DB: krishiai_test
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./init-test-db.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U krishiai_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Test Redis cache
+  redis-test:
+    image: redis:7-alpine
+    container_name: krishiai-redis-test
+    ports:
+      - "6380:6379"
+    command: redis-server --requirepass test_redis_password
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+networks:
+  default:
+    name: krishiai-test-network

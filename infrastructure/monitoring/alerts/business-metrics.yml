@@ -1,0 +1,72 @@
+# Business Metrics Alerts
+# Triggers when business KPIs are anomalous
+
+groups:
+  - name: business_metrics
+    interval: 1m
+    rules:
+      # Alert when active users drop significantly
+      - alert: LowActiveUsers
+        expr: active_users < 700
+        for: 30m
+        labels:
+          severity: warning
+          category: business
+        annotations:
+          summary: "Low active user count"
+          description: "Active users is {{ $value }} (expected: 700+ for 70% retention)"
+
+      # Alert when disease detection usage is low
+      - alert: LowDiseaseDetections
+        expr: rate(disease_detections_total[1h]) < 0.1
+        for: 2h
+        labels:
+          severity: info
+          category: business
+        annotations:
+          summary: "Low disease detection usage"
+          description: "Disease detection rate is {{ $value }} per second (expected: >0.1/s)"
+
+      # Alert when crop recommendation usage is low
+      - alert: LowCropRecommendations
+        expr: rate(crop_recommendations_total[1h]) < 0.05
+        for: 2h
+        labels:
+          severity: info
+          category: business
+        annotations:
+          summary: "Low crop recommendation usage"
+          description: "Crop recommendation rate is {{ $value }} per second (expected: >0.05/s)"
+
+      # Alert when market price queries are low
+      - alert: LowMarketQueries
+        expr: rate(market_price_queries_total[1h]) < 0.08
+        for: 2h
+        labels:
+          severity: info
+          category: business
+        annotations:
+          summary: "Low market price query usage"
+          description: "Market price query rate is {{ $value }} per second (expected: >0.08/s)"
+
+      # Alert when scheme searches are low
+      - alert: LowSchemeSearches
+        expr: rate(scheme_searches_total[1h]) < 0.03
+        for: 2h
+        labels:
+          severity: info
+          category: business
+        annotations:
+          summary: "Low scheme search usage"
+          description: "Scheme search rate is {{ $value }} per second (expected: >0.03/s)"
+
+      # Alert when sync queue is growing (offline issues)
+      - alert: GrowingSyncQueue
+        expr: sync_queue_pending_items > 1000
+        for: 10m
+        labels:
+          severity: warning
+          category: sync
+        annotations:
+          summary: "Sync queue is growing"
+          description: "Sync queue has {{ $value }} pending items (threshold: 1000)"

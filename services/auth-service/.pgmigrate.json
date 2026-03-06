@@ -1,0 +1,13 @@
+{
+  "host": "localhost",
+  "port": 5432,
+  "database": "krishiai_db",
+  "user": "krishiai",
+  "password": "krishiai_dev_password",
+  "migrationsTable": "pgmigrations",
+  "dir": "migrations",
+  "checkOrder": true,
+  "direction": "up",
+  "verbose": true,
+  "schema": "public"
+}

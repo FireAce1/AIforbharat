@@ -1,0 +1,2002 @@
+[
+  {
+    "text": "सेंद्रिय किड नियंत्रण",
+    "intent": "pest_control",
+    "language": "mr"
+  },
+  {
+    "text": "सेंद्रिय किड नियंत्रण",
+    "intent": "pest_control",
+    "language": "mr"
+  },
+  {
+    "text": "KCC लोन",
+    "intent": "loan_information",
+    "language": "hi"
+  },
+  {
+    "text": "मृदा आरोग्य कार्ड",
+    "intent": "soil_health",
+    "language": "mr"
+  },
+  {
+    "text": "ट्रान्सपोर्ट कसे करावे?",
+    "intent": "transport_help",
+    "language": "mr"
+  },
+  {
+    "text": "टमाटर में धब्बे आ गए",
+    "intent": "disease_identification",
+    "language": "hi"
+  },
+  {
+    "text": "ऑर्गेनिक फार्मिंग",
+    "intent": "organic_farming",
+    "language": "hi"
+  },
+  {
+    "text": "पकने का समय",
+    "intent": "harvest_time",
+    "language": "hi"
+  },
+  {
+    "text": "मिट्टी की जांच",
+    "intent": "soil_health",
+    "language": "hi"
+  },
+  {
+    "text": "PMFBY योजना",
+    "intent": "insurance_query",
+    "language": "mr"
+  },
+  {
+    "text": "पानी बचाने के उपाय",
+    "intent": "irrigation_advice",
+    "language": "hi"
+  },
+  {
+    "text": "मळणी यंत्र",
+    "intent": "equipment_advice",
+    "language": "mr"
+  },
+  {
+    "text": "आज की मंडी भाव",
+    "intent": "price_query",
+    "language": "hi"
+  },
+  {
+    "text": "पिकाची परिपक्वता",
+    "intent": "harvest_time",
+    "language": "mr"
+  },
+  {
+    "text": "कृषि सलाह",
+    "intent": "general_farming",
+    "language": "hi"
+  },
+  {
+    "text": "खरीपात काय पिकवावे?",
+    "intent": "crop_recommendation",
+    "language": "mr"
+  },
+  {
+    "text": "साठवण पद्धत",
+    "intent": "storage_advice",
+    "language": "mr"
+  },
+  {
+    "text": "आजचा मंडी भाव",
+    "intent": "price_query",
+    "language": "mr"
+  },
+  {
+    "text": "झाडात रोग आहे",
+    "intent": "disease_identification",
+    "language": "mr"
+  },
+  {
+    "text": "व्यापाऱ्याचा संपर्क",
+    "intent": "market_information",
+    "language": "mr"
+  },
+  {
+    "text": "मिट्टी की उर्वरता",
+    "intent": "soil_health",
+    "language": "hi"
+  },
+  {
+    "text": "मंडी कहां है?",
+    "intent": "market_information",
+    "language": "hi"
+  },
+  {
+    "text": "झाडात रोग आहे",
+    "intent": "disease_identification",
+    "language": "mr"
+  },
+  {
+    "text": "पाणी वाचवण्याचे उपाय",
+    "intent": "irrigation_advice",
+    "language": "mr"
+  },
+  {
+    "text": "सिंचन किती वेळा करावे?",
+    "intent": "irrigation_advice",
+    "language": "mr"
+  },
+  {
+    "text": "सब्सिडी कैसे मिलेगी?",
+    "intent": "subsidy_query",
+    "language": "hi"
+  },
+  {
+    "text": "अनुदान कसे मिळेल?",
+    "intent": "scheme_information",
+    "language": "mr"
+  },
+  {
+    "text": "कौन सी फसल लगाऊं?",
+    "intent": "crop_recommendation",
+    "language": "hi"
+  },
+  {
+    "text": "या हंगामात काय पेरावे?",
+    "intent": "crop_recommendation",
+    "language": "mr"
+  },
+  {
+    "text": "किसान योजना",
+    "intent": "scheme_information",
+    "language": "hi"
+  },
+  {
+    "text": "कीटकनाशक कोणते टाकावे?",
+    "intent": "pest_control",
+    "language": "mr"
+  },
+  {
+    "text": "पकने का समय",
+    "intent": "harvest_time",
+    "language": "hi"
+  },
+  {
+    "text": "टोमॅटोवर डाग आले",
+    "intent": "disease_identification",
+    "language": "mr"
+  },
+  {
+    "text": "गाड़ी की व्यवस्था",
+    "intent": "transport_help",
+    "language": "hi"
+  },
+  {
+    "text": "शेतीचे मार्ग",
+    "intent": "general_farming",
+    "language": "mr"
+  },
+  {
+    "text": "व्यापारी का संपर्क",
+    "intent": "market_information",
+    "language": "hi"
+  },
+  {
+    "text": "सर्वोत्तम पीक कोणते आहे?",
+    "intent": "crop_recommendation",
+    "language": "mr"
+  },
+  {
+    "text": "फसल बीमा योजना",
+    "intent": "scheme_information",
+    "language": "hi"
+  },
+  {
+    "text": "लागवडीची वेळ",
+    "intent": "sowing_time",
+    "language": "mr"
+  },
+  {
+    "text": "टोमॅटोवर डाग आले",
+    "intent": "disease_identification",
+    "language": "mr"
+  },
+  {
+    "text": "मिट्टी की जांच",
+    "intent": "soil_health",
+    "language": "hi"
+  },
+  {
+    "text": "बीज अनुदान",
+    "intent": "subsidy_query",
+    "language": "hi"
+  },
+  {
+    "text": "बारिश कब होगी?",
+    "intent": "weather_query",
+    "language": "hi"
+  },
+  {
+    "text": "पीक कुठे विकावे?",
+    "intent": "market_information",
+    "language": "mr"
+  },
+  {
+    "text": "बैंक लोन",
+    "intent": "loan_information",
+    "language": "hi"
+  },
+  {
+    "text": "पिकाची परिपक्वता",
+    "intent": "harvest_time",
+    "language": "mr"
+  },
+  {
+    "text": "फार्मिंग टिप्स",
+    "intent": "general_farming",
+    "language": "hi"
+  },
+  {
+    "text": "किड नियंत्रण",
+    "intent": "pest_control",
+    "language": "mr"
+  },
+  {
+    "text": "फसल कहां बेचें?",
+    "intent": "market_information",
+    "language": "hi"
+  },
+  {
+    "text": "अनुदान योजना",
+    "intent": "subsidy_query",
+    "language": "hi"
+  },
+  {
+    "text": "झाड सुकत आहे",
+    "intent": "disease_identification",
+    "language": "mr"
+  },
+  {
+    "text": "बीज अनुदान",
+    "intent": "subsidy_query",
+    "language": "hi"
+  },
+  {
+    "text": "बँक कर्ज",
+    "intent": "loan_information",
+    "language": "mr"
+  },
+  {
+    "text": "जवळचा बाजार",
+    "intent": "market_information",
+    "language": "mr"
+  },
+  {
+    "text": "पकने का समय",
+    "intent": "harvest_time",
+    "language": "hi"
+  },
+  {
+    "text": "टिड्डी का हमला",
+    "intent": "pest_control",
+    "language": "hi"
+  },
+  {
+    "text": "नुकसान का मुआवजा",
+    "intent": "insurance_query",
+    "language": "hi"
+  },
+  {
+    "text": "सब्सिडी कैसे मिलेगी?",
+    "intent": "subsidy_query",
+    "language": "hi"
+  },
+  {
+    "text": "अनुदान योजना",
+    "intent": "subsidy_query",
+    "language": "hi"
+  },
+  {
+    "text": "ट्रॅक्टर अनुदान",
+    "intent": "subsidy_query",
+    "language": "mr"
+  },
+  {
+    "text": "फसल तैयार है?",
+    "intent": "harvest_time",
+    "language": "hi"
+  },
+  {
+    "text": "ठिबक अनुदान",
+    "intent": "subsidy_query",
+    "language": "mr"
+  },
+  {
+    "text": "पौधे में रोग है",
+    "intent": "disease_identification",
+    "language": "hi"
+  },
+  {
+    "text": "किसान योजना",
+    "intent": "scheme_information",
+    "language": "hi"
+  },
+  {
+    "text": "मळणी यंत्र",
+    "intent": "equipment_advice",
+    "language": "mr"
+  },
+  {
+    "text": "माल वाहतूक",
+    "intent": "transport_help",
+    "language": "mr"
+  },
+  {
+    "text": "मृदा आरोग्य कार्ड",
+    "intent": "soil_health",
+    "language": "mr"
+  },
+  {
+    "text": "गोदाम की जरूरत",
+    "intent": "storage_advice",
+    "language": "hi"
+  },
+  {
+    "text": "खेती कैसे करें?",
+    "intent": "general_farming",
+    "language": "hi"
+  },
+  {
+    "text": "हार्वेस्टर की जानकारी",
+    "intent": "equipment_advice",
+    "language": "hi"
+  },
+  {
+    "text": "कोणते पीक लावू?",
+    "intent": "crop_recommendation",
+    "language": "mr"
+  },
+  {
+    "text": "अनुदान योजना",
+    "intent": "subsidy_query",
+    "language": "hi"
+  },
+  {
+    "text": "अनुदान कसे मिळेल?",
+    "intent": "subsidy_query",
+    "language": "mr"
+  },
+  {
+    "text": "खेती के तरीके",
+    "intent": "general_farming",
+    "language": "hi"
+  },
+  {
+    "text": "पिकण्याची वेळ",
+    "intent": "harvest_time",
+    "language": "mr"
+  },
+  {
+    "text": "धान्य साठवण",
+    "intent": "storage_advice",
+    "language": "mr"
+  },
+  {
+    "text": "NPK खत",
+    "intent": "fertilizer_advice",
+    "language": "mr"
+  },
+  {
+    "text": "किड नियंत्रण",
+    "intent": "pest_control",
+    "language": "mr"
+  },
+  {
+    "text": "रासायनिक मुक्त खेती",
+    "intent": "organic_farming",
+    "language": "hi"
+  },
+  {
+    "text": "कब बोना चाहिए?",
+    "intent": "sowing_time",
+    "language": "hi"
+  },
+  {
+    "text": "कृषी यंत्रे",
+    "intent": "equipment_advice",
+    "language": "mr"
+  },
+  {
+    "text": "गाड़ी की व्यवस्था",
+    "intent": "transport_help",
+    "language": "hi"
+  },
+  {
+    "text": "सरकारी योजना सांगा",
+    "intent": "scheme_information",
+    "language": "mr"
+  },
+  {
+    "text": "ड्रिप सिंचाई कैसे करें?",
+    "intent": "irrigation_advice",
+    "language": "hi"
+  },
+  {
+    "text": "कल बारिश होगी क्या?",
+    "intent": "weather_query",
+    "language": "hi"
+  },
+  {
+    "text": "कीट से बचाव",
+    "intent": "storage_advice",
+    "language": "hi"
+  },
+  {
+    "text": "खत कधी टाकावे?",
+    "intent": "fertilizer_advice",
+    "language": "mr"
+  },
+  {
+    "text": "PM-KISAN के बारे में",
+    "intent": "scheme_information",
+    "language": "hi"
+  },
+  {
+    "text": "आजचे हवामान कसे आहे?",
+    "intent": "weather_query",
+    "language": "mr"
+  },
+  {
+    "text": "नजदीकी बाजार",
+    "intent": "market_information",
+    "language": "hi"
+  },
+  {
+    "text": "उद्या पाऊस येईल का?",
+    "intent": "weather_query",
+    "language": "mr"
+  },
+  {
+    "text": "सेंद्रिय किड नियंत्रण",
+    "intent": "pest_control",
+    "language": "mr"
+  },
+  {
+    "text": "बुवाई का समय",
+    "intent": "sowing_time",
+    "language": "hi"
+  },
+  {
+    "text": "पांढरी माशी पासून संरक्षण",
+    "intent": "pest_control",
+    "language": "mr"
+  },
+  {
+    "text": "अनाज भंडारण",
+    "intent": "storage_advice",
+    "language": "hi"
+  },
+  {
+    "text": "कल बारिश होगी क्या?",
+    "intent": "weather_query",
+    "language": "hi"
+  },
+  {
+    "text": "गव्हाचा दर काय आहे?",
+    "intent": "price_query",
+    "language": "mr"
+  },
+  {
+    "text": "बीमा प्रीमियम",
+    "intent": "insurance_query",
+    "language": "hi"
+  },
+  {
+    "text": "कृषि सलाह",
+    "intent": "general_farming",
+    "language": "hi"
+  },
+  {
+    "text": "PMFBY योजना",
+    "intent": "insurance_query",
+    "language": "mr"
+  },
+  {
+    "text": "KCC लोन",
+    "intent": "loan_information",
+    "language": "hi"
+  },
+  {
+    "text": "फवारणी यंत्र",
+    "intent": "equipment_advice",
+    "language": "mr"
+  },
+  {
+    "text": "गोदाम की जरूरत",
+    "intent": "storage_advice",
+    "language": "hi"
+  },
+  {
+    "text": "ट्रैक्टर कौन सा खरीदें?",
+    "intent": "equipment_advice",
+    "language": "hi"
+  },
+  {
+    "text": "ठिबक सिंचन कसे करावे?",
+    "intent": "irrigation_advice",
+    "language": "mr"
+  },
+  {
+    "text": "बारिश कब होगी?",
+    "intent": "weather_query",
+    "language": "hi"
+  },
+  {
+    "text": "पाऊस कधी येईल?",
+    "intent": "weather_query",
+    "language": "mr"
+  },
+  {
+    "text": "लागवडीची वेळ",
+    "intent": "sowing_time",
+    "language": "mr"
+  },
+  {
+    "text": "जैविक खाद",
+    "intent": "fertilizer_advice",
+    "language": "hi"
+  },
+  {
+    "text": "भाताचा भाव",
+    "intent": "price_query",
+    "language": "mr"
+  },
+  {
+    "text": "PM-KISAN बद्दल",
+    "intent": "scheme_information",
+    "language": "mr"
+  },
+  {
+    "text": "ऑर्गॅनिक फार्मिंग",
+    "intent": "organic_farming",
+    "language": "mr"
+  },
+  {
+    "text": "बुवाई का समय",
+    "intent": "sowing_time",
+    "language": "hi"
+  },
+  {
+    "text": "ट्रॅक्टर अनुदान",
+    "intent": "subsidy_query",
+    "language": "mr"
+  },
+  {
+    "text": "NPK खत",
+    "intent": "fertilizer_advice",
+    "language": "mr"
+  },
+  {
+    "text": "ट्रैक्टर सब्सिडी",
+    "intent": "subsidy_query",
+    "language": "hi"
+  },
+  {
+    "text": "पकने का समय",
+    "intent": "harvest_time",
+    "language": "hi"
+  },
+  {
+    "text": "खेती के तरीके",
+    "intent": "general_farming",
+    "language": "hi"
+  },
+  {
+    "text": "नुकसानीची भरपाई",
+    "intent": "insurance_query",
+    "language": "mr"
+  },
+  {
+    "text": "जैविक कीट नियंत्रण",
+    "intent": "pest_control",
+    "language": "hi"
+  },
+  {
+    "text": "आजचे हवामान कसे आहे?",
+    "intent": "weather_query",
+    "language": "mr"
+  },
+  {
+    "text": "हार्वेस्टर की जानकारी",
+    "intent": "equipment_advice",
+    "language": "hi"
+  },
+  {
+    "text": "जैविक खाद",
+    "intent": "fertilizer_advice",
+    "language": "hi"
+  },
+  {
+    "text": "सरकारी योजना बताओ",
+    "intent": "scheme_information",
+    "language": "hi"
+  },
+  {
+    "text": "खरीपात काय पिकवावे?",
+    "intent": "crop_recommendation",
+    "language": "mr"
+  },
+  {
+    "text": "गाडीची व्यवस्था",
+    "intent": "transport_help",
+    "language": "mr"
+  },
+  {
+    "text": "PM-KISAN बद्दल",
+    "intent": "scheme_information",
+    "language": "mr"
+  },
+  {
+    "text": "झाड सुकत आहे",
+    "intent": "disease_identification",
+    "language": "mr"
+  },
+  {
+    "text": "बँक कर्ज",
+    "intent": "loan_information",
+    "language": "mr"
+  },
+  {
+    "text": "मंडी का समय",
+    "intent": "market_information",
+    "language": "hi"
+  },
+  {
+    "text": "रोपाई का समय",
+    "intent": "sowing_time",
+    "language": "hi"
+  },
+  {
+    "text": "PM-KISAN बद्दल",
+    "intent": "scheme_information",
+    "language": "mr"
+  },
+  {
+    "text": "प्राकृतिक खेती",
+    "intent": "organic_farming",
+    "language": "hi"
+  },
+  {
+    "text": "कधी पेरावे?",
+    "intent": "sowing_time",
+    "language": "mr"
+  },
+  {
+    "text": "हार्वेस्टर की जानकारी",
+    "intent": "equipment_advice",
+    "language": "hi"
+  },
+  {
+    "text": "पौधा सूख रहा है",
+    "intent": "disease_identification",
+    "language": "hi"
+  },
+  {
+    "text": "यूरिया कितना डालें?",
+    "intent": "fertilizer_advice",
+    "language": "hi"
+  },
+  {
+    "text": "मळणी यंत्र",
+    "intent": "equipment_advice",
+    "language": "mr"
+  },
+  {
+    "text": "फसल बीमा",
+    "intent": "insurance_query",
+    "language": "hi"
+  },
+  {
+    "text": "मृदा आरोग्य कार्ड",
+    "intent": "soil_health",
+    "language": "mr"
+  },
+  {
+    "text": "व्याज दर काय आहे?",
+    "intent": "loan_information",
+    "language": "mr"
+  },
+  {
+    "text": "व्याज दर काय आहे?",
+    "intent": "loan_information",
+    "language": "mr"
+  },
+  {
+    "text": "पाण्याचे प्रमाण सांगा",
+    "intent": "irrigation_advice",
+    "language": "mr"
+  },
+  {
+    "text": "सिंचन किती वेळा करावे?",
+    "intent": "irrigation_advice",
+    "language": "mr"
+  },
+  {
+    "text": "पानी कब देना चाहिए?",
+    "intent": "irrigation_advice",
+    "language": "hi"
+  },
+  {
+    "text": "माती सुधारणा",
+    "intent": "soil_health",
+    "language": "mr"
+  },
+  {
+    "text": "तापमान कितना है?",
+    "intent": "weather_query",
+    "language": "hi"
+  },
+  {
+    "text": "पत्तियां पीली हो रही हैं",
+    "intent": "disease_identification",
+    "language": "hi"
+  },
+  {
+    "text": "तापमान किती आहे?",
+    "intent": "weather_query",
+    "language": "mr"
+  },
+  {
+    "text": "बीमा प्रीमियम",
+    "intent": "insurance_query",
+    "language": "hi"
+  },
+  {
+    "text": "टमाटर में धब्बे आ गए",
+    "intent": "disease_identification",
+    "language": "hi"
+  },
+  {
+    "text": "नुकसानीची भरपाई",
+    "intent": "insurance_query",
+    "language": "mr"
+  },
+  {
+    "text": "कधी पेरावे?",
+    "intent": "sowing_time",
+    "language": "mr"
+  },
+  {
+    "text": "फसल ऋण",
+    "intent": "loan_information",
+    "language": "hi"
+  },
+  {
+    "text": "सिंचन किती वेळा करावे?",
+    "intent": "irrigation_advice",
+    "language": "mr"
+  },
+  {
+    "text": "प्याज की कीमत बताओ",
+    "intent": "price_query",
+    "language": "hi"
+  },
+  {
+    "text": "ऑर्गेनिक फार्मिंग",
+    "intent": "organic_farming",
+    "language": "hi"
+  },
+  {
+    "text": "खरीफ बुवाई",
+    "intent": "sowing_time",
+    "language": "hi"
+  },
+  {
+    "text": "मळणी यंत्र",
+    "intent": "equipment_advice",
+    "language": "mr"
+  },
+  {
+    "text": "माल ढुलाई",
+    "intent": "transport_help",
+    "language": "hi"
+  },
+  {
+    "text": "ट्रॅक्टर कोणता घ्यावा?",
+    "intent": "equipment_advice",
+    "language": "mr"
+  },
+  {
+    "text": "मंडी कहां है?",
+    "intent": "market_information",
+    "language": "hi"
+  },
+  {
+    "text": "सरकारी योजना सांगा",
+    "intent": "scheme_information",
+    "language": "mr"
+  },
+  {
+    "text": "रासायनिक मुक्त शेती",
+    "intent": "organic_farming",
+    "language": "mr"
+  },
+  {
+    "text": "सेंद्रिय शेती कशी करावी?",
+    "intent": "organic_farming",
+    "language": "mr"
+  },
+  {
+    "text": "रासायनिक मुक्त शेती",
+    "intent": "organic_farming",
+    "language": "mr"
+  },
+  {
+    "text": "खाद कब डालें?",
+    "intent": "fertilizer_advice",
+    "language": "hi"
+  },
+  {
+    "text": "अनुदान कसे मिळेल?",
+    "intent": "subsidy_query",
+    "language": "mr"
+  },
+  {
+    "text": "पाणी कधी द्यावे?",
+    "intent": "irrigation_advice",
+    "language": "mr"
+  },
+  {
+    "text": "खेती के तरीके",
+    "intent": "general_farming",
+    "language": "hi"
+  },
+  {
+    "text": "कीट से बचाव",
+    "intent": "storage_advice",
+    "language": "hi"
+  },
+  {
+    "text": "फसल ऋण",
+    "intent": "loan_information",
+    "language": "hi"
+  },
+  {
+    "text": "फसल बीमा योजना",
+    "intent": "scheme_information",
+    "language": "hi"
+  },
+  {
+    "text": "फसल तैयार है?",
+    "intent": "harvest_time",
+    "language": "hi"
+  },
+  {
+    "text": "नैसर्गिक शेती",
+    "intent": "organic_farming",
+    "language": "mr"
+  },
+  {
+    "text": "सेंद्रिय खत",
+    "intent": "fertilizer_advice",
+    "language": "mr"
+  },
+  {
+    "text": "फसल बीमा",
+    "intent": "insurance_query",
+    "language": "hi"
+  },
+  {
+    "text": "NPK खाद",
+    "intent": "fertilizer_advice",
+    "language": "hi"
+  },
+  {
+    "text": "जैविक कीट नियंत्रण",
+    "intent": "pest_control",
+    "language": "hi"
+  },
+  {
+    "text": "ट्रॅक्टर कोणता घ्यावा?",
+    "intent": "equipment_advice",
+    "language": "mr"
+  },
+  {
+    "text": "सेंद्रिय प्रमाणन",
+    "intent": "organic_farming",
+    "language": "mr"
+  },
+  {
+    "text": "पिकाची परिपक्वता",
+    "intent": "harvest_time",
+    "language": "mr"
+  },
+  {
+    "text": "टोळ हल्ला",
+    "intent": "pest_control",
+    "language": "mr"
+  },
+  {
+    "text": "कृषी सल्ला",
+    "intent": "general_farming",
+    "language": "mr"
+  },
+  {
+    "text": "कल बारिश होगी क्या?",
+    "intent": "weather_query",
+    "language": "hi"
+  },
+  {
+    "text": "सिंचाई कितनी बार करें?",
+    "intent": "irrigation_advice",
+    "language": "hi"
+  },
+  {
+    "text": "नैसर्गिक शेती",
+    "intent": "organic_farming",
+    "language": "mr"
+  },
+  {
+    "text": "कल बारिश होगी क्या?",
+    "intent": "weather_query",
+    "language": "hi"
+  },
+  {
+    "text": "पाने पिवळी होत आहेत",
+    "intent": "disease_identification",
+    "language": "mr"
+  },
+  {
+    "text": "शेती कशी करावी?",
+    "intent": "general_farming",
+    "language": "mr"
+  },
+  {
+    "text": "सिंचन किती वेळा करावे?",
+    "intent": "irrigation_advice",
+    "language": "mr"
+  },
+  {
+    "text": "कृषी यंत्रे",
+    "intent": "equipment_advice",
+    "language": "mr"
+  },
+  {
+    "text": "फसल कैसे रखें?",
+    "intent": "storage_advice",
+    "language": "hi"
+  },
+  {
+    "text": "पाऊस कधी येईल?",
+    "intent": "weather_query",
+    "language": "mr"
+  },
+  {
+    "text": "आज का मौसम कैसा है?",
+    "intent": "weather_query",
+    "language": "hi"
+  },
+  {
+    "text": "साठवण पद्धत",
+    "intent": "storage_advice",
+    "language": "mr"
+  },
+  {
+    "text": "पाणी कधी द्यावे?",
+    "intent": "irrigation_advice",
+    "language": "mr"
+  },
+  {
+    "text": "पीक विमा",
+    "intent": "insurance_query",
+    "language": "mr"
+  },
+  {
+    "text": "पिकण्याची वेळ",
+    "intent": "harvest_time",
+    "language": "mr"
+  },
+  {
+    "text": "कब बोना चाहिए?",
+    "intent": "sowing_time",
+    "language": "hi"
+  },
+  {
+    "text": "जैविक कीट नियंत्रण",
+    "intent": "pest_control",
+    "language": "hi"
+  },
+  {
+    "text": "व्यापारी का संपर्क",
+    "intent": "market_information",
+    "language": "hi"
+  },
+  {
+    "text": "फार्मिंग टिप्स",
+    "intent": "general_farming",
+    "language": "mr"
+  },
+  {
+    "text": "अनुदान योजना",
+    "intent": "subsidy_query",
+    "language": "hi"
+  },
+  {
+    "text": "सबसे अच्छी फसल कौन सी है?",
+    "intent": "crop_recommendation",
+    "language": "hi"
+  },
+  {
+    "text": "pH मूल्य",
+    "intent": "soil_health",
+    "language": "mr"
+  },
+  {
+    "text": "मंडी तक कैसे ले जाएं?",
+    "intent": "transport_help",
+    "language": "hi"
+  },
+  {
+    "text": "कौन सी फसल लगाऊं?",
+    "intent": "crop_recommendation",
+    "language": "hi"
+  },
+  {
+    "text": "जवळचा बाजार",
+    "intent": "market_information",
+    "language": "mr"
+  },
+  {
+    "text": "टमाटर में धब्बे आ गए",
+    "intent": "disease_identification",
+    "language": "hi"
+  },
+  {
+    "text": "इस मौसम में क्या बोएं?",
+    "intent": "crop_recommendation",
+    "language": "hi"
+  },
+  {
+    "text": "टमाटर में धब्बे आ गए",
+    "intent": "disease_identification",
+    "language": "hi"
+  },
+  {
+    "text": "पीक कुठे विकावे?",
+    "intent": "market_information",
+    "language": "mr"
+  },
+  {
+    "text": "कटाई कब करें?",
+    "intent": "harvest_time",
+    "language": "hi"
+  },
+  {
+    "text": "कटाई विधि",
+    "intent": "harvest_time",
+    "language": "hi"
+  },
+  {
+    "text": "आजचा मंडी भाव",
+    "intent": "price_query",
+    "language": "mr"
+  },
+  {
+    "text": "पिकात किडे लागले",
+    "intent": "disease_identification",
+    "language": "mr"
+  },
+  {
+    "text": "पीक तयार आहे?",
+    "intent": "harvest_time",
+    "language": "mr"
+  },
+  {
+    "text": "शेतीची माहिती",
+    "intent": "general_farming",
+    "language": "mr"
+  },
+  {
+    "text": "मंडी का समय",
+    "intent": "market_information",
+    "language": "hi"
+  },
+  {
+    "text": "बीमा प्रीमियम",
+    "intent": "insurance_query",
+    "language": "hi"
+  },
+  {
+    "text": "सब्सिडी कैसे मिलेगी?",
+    "intent": "subsidy_query",
+    "language": "hi"
+  },
+  {
+    "text": "सरकारी योजना बताओ",
+    "intent": "scheme_information",
+    "language": "hi"
+  },
+  {
+    "text": "धान्य साठवण",
+    "intent": "storage_advice",
+    "language": "mr"
+  },
+  {
+    "text": "पाने पिवळी होत आहेत",
+    "intent": "disease_identification",
+    "language": "mr"
+  },
+  {
+    "text": "आजचे हवामान कसे आहे?",
+    "intent": "weather_query",
+    "language": "mr"
+  },
+  {
+    "text": "माल वाहतूक",
+    "intent": "transport_help",
+    "language": "mr"
+  },
+  {
+    "text": "पानी की मात्रा बताओ",
+    "intent": "irrigation_advice",
+    "language": "hi"
+  },
+  {
+    "text": "व्यापारी का संपर्क",
+    "intent": "market_information",
+    "language": "hi"
+  },
+  {
+    "text": "सिंचन किती वेळा करावे?",
+    "intent": "irrigation_advice",
+    "language": "mr"
+  },
+  {
+    "text": "बीज कब डालें?",
+    "intent": "sowing_time",
+    "language": "hi"
+  },
+  {
+    "text": "बीमा प्रीमियम",
+    "intent": "insurance_query",
+    "language": "hi"
+  },
+  {
+    "text": "पीक तयार आहे?",
+    "intent": "harvest_time",
+    "language": "mr"
+  },
+  {
+    "text": "मिट्टी सुधार",
+    "intent": "soil_health",
+    "language": "hi"
+  },
+  {
+    "text": "पत्तियां पीली हो रही हैं",
+    "intent": "disease_identification",
+    "language": "hi"
+  },
+  {
+    "text": "मिट्टी की उर्वरता",
+    "intent": "soil_health",
+    "language": "hi"
+  },
+  {
+    "text": "आजचे हवामान कसे आहे?",
+    "intent": "weather_query",
+    "language": "mr"
+  },
+  {
+    "text": "बैंक लोन",
+    "intent": "loan_information",
+    "language": "hi"
+  },
+  {
+    "text": "पाणी कधी द्यावे?",
+    "intent": "irrigation_advice",
+    "language": "mr"
+  },
+  {
+    "text": "फसल कहां बेचें?",
+    "intent": "market_information",
+    "language": "hi"
+  },
+  {
+    "text": "बियाणे कधी टाकावे?",
+    "intent": "sowing_time",
+    "language": "mr"
+  },
+  {
+    "text": "व्यापाऱ्याचा संपर्क",
+    "intent": "market_information",
+    "language": "mr"
+  },
+  {
+    "text": "विमा प्रीमियम",
+    "intent": "insurance_query",
+    "language": "mr"
+  },
+  {
+    "text": "टिड्डी का हमला",
+    "intent": "pest_control",
+    "language": "hi"
+  },
+  {
+    "text": "आजचा मंडी भाव",
+    "intent": "price_query",
+    "language": "mr"
+  },
+  {
+    "text": "कृषि सलाह",
+    "intent": "general_farming",
+    "language": "hi"
+  },
+  {
+    "text": "प्याज की कीमत बताओ",
+    "intent": "price_query",
+    "language": "hi"
+  },
+  {
+    "text": "माल वाहतूक",
+    "intent": "transport_help",
+    "language": "mr"
+  },
+  {
+    "text": "रोपाई का समय",
+    "intent": "sowing_time",
+    "language": "hi"
+  },
+  {
+    "text": "गोदामाची गरज",
+    "intent": "storage_advice",
+    "language": "mr"
+  },
+  {
+    "text": "पेरणीची वेळ",
+    "intent": "sowing_time",
+    "language": "mr"
+  },
+  {
+    "text": "रासायनिक मुक्त खेती",
+    "intent": "organic_farming",
+    "language": "hi"
+  },
+  {
+    "text": "ट्रॅक्टर कोणता घ्यावा?",
+    "intent": "equipment_advice",
+    "language": "mr"
+  },
+  {
+    "text": "माल ढुलाई",
+    "intent": "transport_help",
+    "language": "hi"
+  },
+  {
+    "text": "पाने पिवळी होत आहेत",
+    "intent": "disease_identification",
+    "language": "mr"
+  },
+  {
+    "text": "मंडीची वेळ",
+    "intent": "market_information",
+    "language": "mr"
+  },
+  {
+    "text": "व्याज दर काय आहे?",
+    "intent": "loan_information",
+    "language": "mr"
+  },
+  {
+    "text": "मंडीपर्यंत कसे न्यावे?",
+    "intent": "transport_help",
+    "language": "mr"
+  },
+  {
+    "text": "हवामानाचा अंदाज द्या",
+    "intent": "weather_query",
+    "language": "mr"
+  },
+  {
+    "text": "बारिश कब होगी?",
+    "intent": "weather_query",
+    "language": "hi"
+  },
+  {
+    "text": "बीज कब डालें?",
+    "intent": "sowing_time",
+    "language": "hi"
+  },
+  {
+    "text": "अनुदान योजना",
+    "intent": "subsidy_query",
+    "language": "mr"
+  },
+  {
+    "text": "शेती कशी करावी?",
+    "intent": "general_farming",
+    "language": "mr"
+  },
+  {
+    "text": "रोपाई का समय",
+    "intent": "sowing_time",
+    "language": "hi"
+  },
+  {
+    "text": "फसल की परिपक्वता",
+    "intent": "harvest_time",
+    "language": "hi"
+  },
+  {
+    "text": "ठिबक सिंचन कसे करावे?",
+    "intent": "irrigation_advice",
+    "language": "mr"
+  },
+  {
+    "text": "अनुदान कसे मिळेल?",
+    "intent": "scheme_information",
+    "language": "mr"
+  },
+  {
+    "text": "पानी की मात्रा बताओ",
+    "intent": "irrigation_advice",
+    "language": "hi"
+  },
+  {
+    "text": "मंडीची वेळ",
+    "intent": "market_information",
+    "language": "mr"
+  },
+  {
+    "text": "कटाई कब करें?",
+    "intent": "harvest_time",
+    "language": "hi"
+  },
+  {
+    "text": "युरिया किती टाकावे?",
+    "intent": "fertilizer_advice",
+    "language": "mr"
+  },
+  {
+    "text": "खरीपात काय पिकवावे?",
+    "intent": "crop_recommendation",
+    "language": "mr"
+  },
+  {
+    "text": "सेंद्रिय किड नियंत्रण",
+    "intent": "pest_control",
+    "language": "mr"
+  },
+  {
+    "text": "शेती कशी करावी?",
+    "intent": "general_farming",
+    "language": "mr"
+  },
+  {
+    "text": "खरीफ में क्या उगाएं?",
+    "intent": "crop_recommendation",
+    "language": "hi"
+  },
+  {
+    "text": "बीज अनुदान",
+    "intent": "subsidy_query",
+    "language": "hi"
+  },
+  {
+    "text": "बीज कब डालें?",
+    "intent": "sowing_time",
+    "language": "hi"
+  },
+  {
+    "text": "शेतीची माहिती",
+    "intent": "general_farming",
+    "language": "mr"
+  },
+  {
+    "text": "सबसे अच्छी फसल कौन सी है?",
+    "intent": "crop_recommendation",
+    "language": "hi"
+  },
+  {
+    "text": "विमा क्लेम कसा करावा?",
+    "intent": "insurance_query",
+    "language": "mr"
+  },
+  {
+    "text": "रासायनिक मुक्त खेती",
+    "intent": "organic_farming",
+    "language": "hi"
+  },
+  {
+    "text": "जैविक कीट नियंत्रण",
+    "intent": "pest_control",
+    "language": "hi"
+  },
+  {
+    "text": "कटाई कब करें?",
+    "intent": "harvest_time",
+    "language": "hi"
+  },
+  {
+    "text": "KCC लोन",
+    "intent": "loan_information",
+    "language": "hi"
+  },
+  {
+    "text": "फसल में कीड़े लग गए",
+    "intent": "disease_identification",
+    "language": "hi"
+  },
+  {
+    "text": "खाद कब डालें?",
+    "intent": "fertilizer_advice",
+    "language": "hi"
+  },
+  {
+    "text": "आजचा मंडी भाव",
+    "intent": "price_query",
+    "language": "mr"
+  },
+  {
+    "text": "पीक वाहतूक",
+    "intent": "transport_help",
+    "language": "mr"
+  },
+  {
+    "text": "धान्य साठवण",
+    "intent": "storage_advice",
+    "language": "mr"
+  },
+  {
+    "text": "किड नियंत्रण",
+    "intent": "pest_control",
+    "language": "mr"
+  },
+  {
+    "text": "फसल की परिपक्वता",
+    "intent": "harvest_time",
+    "language": "hi"
+  },
+  {
+    "text": "पीक कर्ज",
+    "intent": "loan_information",
+    "language": "mr"
+  },
+  {
+    "text": "मौसम का पूर्वानुमान दो",
+    "intent": "weather_query",
+    "language": "hi"
+  },
+  {
+    "text": "पीक कुठे विकावे?",
+    "intent": "market_information",
+    "language": "mr"
+  },
+  {
+    "text": "हार्वेस्टरची माहिती",
+    "intent": "equipment_advice",
+    "language": "mr"
+  },
+  {
+    "text": "सब्सिडी कैसे मिलेगी?",
+    "intent": "subsidy_query",
+    "language": "hi"
+  },
+  {
+    "text": "आज की मंडी भाव",
+    "intent": "price_query",
+    "language": "hi"
+  },
+  {
+    "text": "शेतीची माहिती",
+    "intent": "general_farming",
+    "language": "mr"
+  },
+  {
+    "text": "शेतकरी योजना",
+    "intent": "scheme_information",
+    "language": "mr"
+  },
+  {
+    "text": "PMFBY योजना",
+    "intent": "insurance_query",
+    "language": "hi"
+  },
+  {
+    "text": "किड्यांपासून संरक्षण",
+    "intent": "storage_advice",
+    "language": "mr"
+  },
+  {
+    "text": "विमा प्रीमियम",
+    "intent": "insurance_query",
+    "language": "mr"
+  },
+  {
+    "text": "कृषि यंत्र",
+    "intent": "equipment_advice",
+    "language": "hi"
+  },
+  {
+    "text": "प्याज की कीमत बताओ",
+    "intent": "price_query",
+    "language": "hi"
+  },
+  {
+    "text": "रबी की फसल सुझाव दो",
+    "intent": "crop_recommendation",
+    "language": "hi"
+  },
+  {
+    "text": "फसल बीमा",
+    "intent": "insurance_query",
+    "language": "hi"
+  },
+  {
+    "text": "फसल बीमा योजना",
+    "intent": "scheme_information",
+    "language": "hi"
+  },
+  {
+    "text": "पांढरी माशी पासून संरक्षण",
+    "intent": "pest_control",
+    "language": "mr"
+  },
+  {
+    "text": "कौन सी फसल लगाऊं?",
+    "intent": "crop_recommendation",
+    "language": "hi"
+  },
+  {
+    "text": "सेंद्रिय शेती कशी करावी?",
+    "intent": "organic_farming",
+    "language": "mr"
+  },
+  {
+    "text": "PMFBY योजना",
+    "intent": "insurance_query",
+    "language": "mr"
+  },
+  {
+    "text": "हार्वेस्टर की जानकारी",
+    "intent": "equipment_advice",
+    "language": "hi"
+  },
+  {
+    "text": "सरकारी योजना सांगा",
+    "intent": "scheme_information",
+    "language": "mr"
+  },
+  {
+    "text": "अनुदान कसे मिळेल?",
+    "intent": "scheme_information",
+    "language": "mr"
+  },
+  {
+    "text": "बुवाई का समय",
+    "intent": "sowing_time",
+    "language": "hi"
+  },
+  {
+    "text": "पौधे में रोग है",
+    "intent": "disease_identification",
+    "language": "hi"
+  },
+  {
+    "text": "फसल की परिपक्वता",
+    "intent": "harvest_time",
+    "language": "hi"
+  },
+  {
+    "text": "व्याज दर काय आहे?",
+    "intent": "loan_information",
+    "language": "mr"
+  },
+  {
+    "text": "मंडी कुठे आहे?",
+    "intent": "market_information",
+    "language": "mr"
+  },
+  {
+    "text": "पेरणीची वेळ",
+    "intent": "sowing_time",
+    "language": "mr"
+  },
+  {
+    "text": "झाड सुकत आहे",
+    "intent": "disease_identification",
+    "language": "mr"
+  },
+  {
+    "text": "नुकसानीची भरपाई",
+    "intent": "insurance_query",
+    "language": "mr"
+  },
+  {
+    "text": "कीट से बचाव",
+    "intent": "storage_advice",
+    "language": "hi"
+  },
+  {
+    "text": "मंडी का समय",
+    "intent": "market_information",
+    "language": "hi"
+  },
+  {
+    "text": "मातीची सुपीकता",
+    "intent": "soil_health",
+    "language": "mr"
+  },
+  {
+    "text": "किसान योजना",
+    "intent": "scheme_information",
+    "language": "hi"
+  },
+  {
+    "text": "टोमॅटोचा भाव काय आहे?",
+    "intent": "price_query",
+    "language": "mr"
+  },
+  {
+    "text": "फसल तैयार है?",
+    "intent": "harvest_time",
+    "language": "hi"
+  },
+  {
+    "text": "कापणी पद्धत",
+    "intent": "harvest_time",
+    "language": "mr"
+  },
+  {
+    "text": "ड्रिप सिंचाई कैसे करें?",
+    "intent": "irrigation_advice",
+    "language": "hi"
+  },
+  {
+    "text": "पीक कसे ठेवावे?",
+    "intent": "storage_advice",
+    "language": "mr"
+  },
+  {
+    "text": "धान्य साठवण",
+    "intent": "storage_advice",
+    "language": "mr"
+  },
+  {
+    "text": "बीमा प्रीमियम",
+    "intent": "insurance_query",
+    "language": "hi"
+  },
+  {
+    "text": "सर्वोत्तम पीक कोणते आहे?",
+    "intent": "crop_recommendation",
+    "language": "mr"
+  },
+  {
+    "text": "मातीची सुपीकता",
+    "intent": "soil_health",
+    "language": "mr"
+  },
+  {
+    "text": "बीमा क्लेम कैसे करें?",
+    "intent": "insurance_query",
+    "language": "hi"
+  },
+  {
+    "text": "टमाटर का भाव क्या है?",
+    "intent": "price_query",
+    "language": "hi"
+  },
+  {
+    "text": "अनाज भंडारण",
+    "intent": "storage_advice",
+    "language": "hi"
+  },
+  {
+    "text": "अनुदान योजना",
+    "intent": "subsidy_query",
+    "language": "hi"
+  },
+  {
+    "text": "ट्रांसपोर्ट कैसे करें?",
+    "intent": "transport_help",
+    "language": "hi"
+  },
+  {
+    "text": "फसल में कीड़े लग गए",
+    "intent": "disease_identification",
+    "language": "hi"
+  },
+  {
+    "text": "टोळ हल्ला",
+    "intent": "pest_control",
+    "language": "mr"
+  },
+  {
+    "text": "आजचा मंडी भाव",
+    "intent": "price_query",
+    "language": "mr"
+  },
+  {
+    "text": "ट्रैक्टर कौन सा खरीदें?",
+    "intent": "equipment_advice",
+    "language": "hi"
+  },
+  {
+    "text": "रासायनिक मुक्त खेती",
+    "intent": "organic_farming",
+    "language": "hi"
+  },
+  {
+    "text": "जैविक खेती कैसे करें?",
+    "intent": "organic_farming",
+    "language": "hi"
+  },
+  {
+    "text": "जैविक प्रमाणन",
+    "intent": "organic_farming",
+    "language": "hi"
+  },
+  {
+    "text": "धान का भाव",
+    "intent": "price_query",
+    "language": "hi"
+  },
+  {
+    "text": "ठिबक अनुदान",
+    "intent": "subsidy_query",
+    "language": "mr"
+  },
+  {
+    "text": "फसल परिवहन",
+    "intent": "transport_help",
+    "language": "hi"
+  },
+  {
+    "text": "विमा क्लेम कसा करावा?",
+    "intent": "insurance_query",
+    "language": "mr"
+  },
+  {
+    "text": "पौधा सूख रहा है",
+    "intent": "disease_identification",
+    "language": "hi"
+  },
+  {
+    "text": "खत कधी टाकावे?",
+    "intent": "fertilizer_advice",
+    "language": "mr"
+  },
+  {
+    "text": "सेंद्रिय प्रमाणन",
+    "intent": "organic_farming",
+    "language": "mr"
+  },
+  {
+    "text": "फसल कहां बेचें?",
+    "intent": "market_information",
+    "language": "hi"
+  },
+  {
+    "text": "आजचे हवामान कसे आहे?",
+    "intent": "weather_query",
+    "language": "mr"
+  },
+  {
+    "text": "कापणी कधी करावी?",
+    "intent": "harvest_time",
+    "language": "mr"
+  },
+  {
+    "text": "धान का भाव",
+    "intent": "price_query",
+    "language": "hi"
+  },
+  {
+    "text": "तापमान किती आहे?",
+    "intent": "weather_query",
+    "language": "mr"
+  },
+  {
+    "text": "ट्रैक्टर कौन सा खरीदें?",
+    "intent": "equipment_advice",
+    "language": "hi"
+  },
+  {
+    "text": "पेरणीची वेळ",
+    "intent": "sowing_time",
+    "language": "mr"
+  },
+  {
+    "text": "आज का मौसम कैसा है?",
+    "intent": "weather_query",
+    "language": "hi"
+  },
+  {
+    "text": "KCC कर्ज",
+    "intent": "loan_information",
+    "language": "mr"
+  },
+  {
+    "text": "धान का भाव",
+    "intent": "price_query",
+    "language": "hi"
+  },
+  {
+    "text": "पाणी कधी द्यावे?",
+    "intent": "irrigation_advice",
+    "language": "mr"
+  },
+  {
+    "text": "कांद्याची किंमत सांगा",
+    "intent": "price_query",
+    "language": "mr"
+  },
+  {
+    "text": "सेंद्रिय शेती कशी करावी?",
+    "intent": "organic_farming",
+    "language": "mr"
+  },
+  {
+    "text": "नुकसान का मुआवजा",
+    "intent": "insurance_query",
+    "language": "hi"
+  },
+  {
+    "text": "माती सुधारणा",
+    "intent": "soil_health",
+    "language": "mr"
+  },
+  {
+    "text": "माल ढुलाई",
+    "intent": "transport_help",
+    "language": "hi"
+  },
+  {
+    "text": "फसल में कीड़े लग गए",
+    "intent": "disease_identification",
+    "language": "hi"
+  },
+  {
+    "text": "खरीप पेरणी",
+    "intent": "sowing_time",
+    "language": "mr"
+  },
+  {
+    "text": "पीक कर्ज",
+    "intent": "loan_information",
+    "language": "mr"
+  },
+  {
+    "text": "पाणी कधी द्यावे?",
+    "intent": "irrigation_advice",
+    "language": "mr"
+  },
+  {
+    "text": "सेंद्रिय खत",
+    "intent": "fertilizer_advice",
+    "language": "mr"
+  },
+  {
+    "text": "फसल की परिपक्वता",
+    "intent": "harvest_time",
+    "language": "hi"
+  },
+  {
+    "text": "स्प्रेयर मशीन",
+    "intent": "equipment_advice",
+    "language": "hi"
+  },
+  {
+    "text": "भाताचा भाव",
+    "intent": "price_query",
+    "language": "mr"
+  },
+  {
+    "text": "गोदाम की जरूरत",
+    "intent": "storage_advice",
+    "language": "hi"
+  },
+  {
+    "text": "ऑर्गेनिक फार्मिंग",
+    "intent": "organic_farming",
+    "language": "hi"
+  },
+  {
+    "text": "बैंक लोन",
+    "intent": "loan_information",
+    "language": "hi"
+  },
+  {
+    "text": "ट्रांसपोर्ट कैसे करें?",
+    "intent": "transport_help",
+    "language": "hi"
+  },
+  {
+    "text": "फसल बीमा योजना",
+    "intent": "scheme_information",
+    "language": "hi"
+  },
+  {
+    "text": "जैविक प्रमाणन",
+    "intent": "organic_farming",
+    "language": "hi"
+  },
+  {
+    "text": "सेंद्रिय खत",
+    "intent": "fertilizer_advice",
+    "language": "mr"
+  },
+  {
+    "text": "मौसम का पूर्वानुमान दो",
+    "intent": "weather_query",
+    "language": "hi"
+  },
+  {
+    "text": "KCC लोन",
+    "intent": "loan_information",
+    "language": "hi"
+  },
+  {
+    "text": "शेती कर्ज कसे घ्यावे?",
+    "intent": "loan_information",
+    "language": "mr"
+  },
+  {
+    "text": "लागवडीची वेळ",
+    "intent": "sowing_time",
+    "language": "mr"
+  },
+  {
+    "text": "मातीची सुपीकता",
+    "intent": "soil_health",
+    "language": "mr"
+  },
+  {
+    "text": "कधी पेरावे?",
+    "intent": "sowing_time",
+    "language": "mr"
+  },
+  {
+    "text": "फार्मिंग टिप्स",
+    "intent": "general_farming",
+    "language": "hi"
+  },
+  {
+    "text": "शेतीचे मार्ग",
+    "intent": "general_farming",
+    "language": "mr"
+  },
+  {
+    "text": "पिकाची परिपक्वता",
+    "intent": "harvest_time",
+    "language": "mr"
+  },
+  {
+    "text": "रब्बीचे पीक सुचवा",
+    "intent": "crop_recommendation",
+    "language": "mr"
+  },
+  {
+    "text": "कीटकनाशक कोणते टाकावे?",
+    "intent": "pest_control",
+    "language": "mr"
+  },
+  {
+    "text": "मळणी यंत्र",
+    "intent": "equipment_advice",
+    "language": "mr"
+  },
+  {
+    "text": "पिकात किडे लागले",
+    "intent": "disease_identification",
+    "language": "mr"
+  },
+  {
+    "text": "ब्याज दर क्या है?",
+    "intent": "loan_information",
+    "language": "hi"
+  },
+  {
+    "text": "KCC लोन",
+    "intent": "loan_information",
+    "language": "hi"
+  }
+]

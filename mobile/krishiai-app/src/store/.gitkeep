@@ -1,0 +1,3 @@
+# Store directory
+# Contains Redux store configuration, slices, and sagas
+# Will be implemented in Task 3.2

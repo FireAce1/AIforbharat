@@ -1,0 +1,244 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: failover-controller
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: failover-controller
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services", "configmaps"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "statefulsets"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: failover-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: failover-controller
+subjects:
+  - kind: ServiceAccount
+    name: failover-controller
+    namespace: default
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: failover-controller-config
+  namespace: default
+data:
+  PRIMARY_HOST: "postgres-primary.us-east-1.svc.cluster.local"
+  PRIMARY_PORT: "5432"
+  REPLICA_HOST: "postgres-replica.us-west-2.svc.cluster.local"
+  REPLICA_PORT: "5432"
+  HEALTH_CHECK_INTERVAL: "30"
+  FAILURE_THRESHOLD: "3"
+  REPLICATION_LAG_THRESHOLD: "300"
+  AUTO_FAILOVER_ENABLED: "true"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: failover-controller
+  namespace: default
+  labels:
+    app: failover-controller
+    component: disaster-recovery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: failover-controller
+  template:
+    metadata:
+      labels:
+        app: failover-controller
+        component: disaster-recovery
+    spec:
+      serviceAccountName: failover-controller
+      containers:
+        - name: failover-controller
+          image: postgres:14-alpine
+          command:
+            - /bin/sh
+            - -c
+            - |
+              #!/bin/sh
+              set -e
+              
+              echo "Failover Controller Starting..."
+              echo "Primary: $PRIMARY_HOST:$PRIMARY_PORT"
+              echo "Replica: $REPLICA_HOST:$REPLICA_PORT"
+              echo "Health Check Interval: ${HEALTH_CHECK_INTERVAL}s"
+              echo "Failure Threshold: $FAILURE_THRESHOLD"
+              
+              CONSECUTIVE_FAILURES=0
+              FAILOVER_IN_PROGRESS=false
+              
+              while true; do
+                # Health check primary
+                if pg_isready -h $PRIMARY_HOST -p $PRIMARY_PORT -U $POSTGRES_USER -t 5 > /dev/null 2>&1; then
+                  # Primary is healthy
+                  if [ $CONSECUTIVE_FAILURES -gt 0 ]; then
+                    echo "$(date): Primary recovered after $CONSECUTIVE_FAILURES failures"
+                  fi
+                  CONSECUTIVE_FAILURES=0
+                  FAILOVER_IN_PROGRESS=false
+                else
+                  # Primary is unhealthy
+                  CONSECUTIVE_FAILURES=$((CONSECUTIVE_FAILURES + 1))
+                  echo "$(date): Primary health check failed ($CONSECUTIVE_FAILURES/$FAILURE_THRESHOLD)"
+                  
+                  # Check if we should trigger failover
+                  if [ $CONSECUTIVE_FAILURES -ge $FAILURE_THRESHOLD ] && [ "$FAILOVER_IN_PROGRESS" = "false" ] && [ "$AUTO_FAILOVER_ENABLED" = "true" ]; then
+                    echo "$(date): CRITICAL - Primary failed $FAILURE_THRESHOLD consecutive health checks"
+                    echo "$(date): Initiating automated failover..."
+                    
+                    FAILOVER_IN_PROGRESS=true
+                    
+                    # Verify replica is healthy
+                    if pg_isready -h $REPLICA_HOST -p $REPLICA_PORT -U $POSTGRES_USER -t 5 > /dev/null 2>&1; then
+                      echo "$(date): Replica is healthy, proceeding with failover"
+                      
+                      # Promote replica
+                      PGPASSWORD=$POSTGRES_PASSWORD psql -h $REPLICA_HOST -p $REPLICA_PORT -U $POSTGRES_USER -d postgres -c "SELECT pg_promote();" || {
+                        echo "$(date): ERROR - Failed to promote replica"
+                        FAILOVER_IN_PROGRESS=false
+                        continue
+                      }
+                      
+                      # Wait for promotion
+                      sleep 10
+                      
+                      # Verify promotion
+                      IN_RECOVERY=$(PGPASSWORD=$POSTGRES_PASSWORD psql -h $REPLICA_HOST -p $REPLICA_PORT -U $POSTGRES_USER -d postgres -t -c "SELECT pg_is_in_recovery();" | tr -d ' ')
+                      
+                      if [ "$IN_RECOVERY" = "f" ]; then
+                        echo "$(date): SUCCESS - Replica promoted to primary"
+                        
+                        # Update ConfigMap
+                        kubectl patch configmap postgres-config --type merge -p "{\"data\":{\"DB_HOST\":\"$REPLICA_HOST\"}}" || {
+                          echo "$(date): WARNING - Failed to update ConfigMap"
+                        }
+                        
+                        # Send notification
+                        if [ ! -z "$NOTIFICATION_WEBHOOK" ]; then
+                          curl -X POST $NOTIFICATION_WEBHOOK \
+                            -H "Content-Type: application/json" \
+                            -d "{\"text\":\"🚨 AUTOMATED FAILOVER: Replica promoted to primary\",\"timestamp\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" || true
+                        fi
+                        
+                        # Export metrics
+                        echo "krishiai_dr_last_failover_timestamp $(date +%s)" > /metrics/failover.prom
+                        echo "krishiai_dr_failover_count_total $(($(cat /metrics/failover_count 2>/dev/null || echo 0) + 1))" >> /metrics/failover.prom
+                        echo $(($(cat /metrics/failover_count 2>/dev/null || echo 0) + 1)) > /metrics/failover_count
+                        
+                        echo "$(date): Failover completed successfully"
+                      else
+                        echo "$(date): ERROR - Promotion did not complete"
+                        FAILOVER_IN_PROGRESS=false
+                      fi
+                    else
+                      echo "$(date): ERROR - Replica is not healthy, aborting failover"
+                      FAILOVER_IN_PROGRESS=false
+                    fi
+                  fi
+                fi
+                
+                # Sleep before next check
+                sleep $HEALTH_CHECK_INTERVAL
+              done
+          env:
+            - name: PRIMARY_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: failover-controller-config
+                  key: PRIMARY_HOST
+            - name: PRIMARY_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: failover-controller-config
+                  key: PRIMARY_PORT
+            - name: REPLICA_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: failover-controller-config
+                  key: REPLICA_HOST
+            - name: REPLICA_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: failover-controller-config
+                  key: REPLICA_PORT
+            - name: HEALTH_CHECK_INTERVAL
+              valueFrom:
+                configMapKeyRef:
+                  name: failover-controller-config
+                  key: HEALTH_CHECK_INTERVAL
+            - name: FAILURE_THRESHOLD
+              valueFrom:
+                configMapKeyRef:
+                  name: failover-controller-config
+                  key: FAILURE_THRESHOLD
+            - name: REPLICATION_LAG_THRESHOLD
+              valueFrom:
+                configMapKeyRef:
+                  name: failover-controller-config
+                  key: REPLICATION_LAG_THRESHOLD
+            - name: AUTO_FAILOVER_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: failover-controller-config
+                  key: AUTO_FAILOVER_ENABLED
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_PASSWORD
+            - name: NOTIFICATION_WEBHOOK
+              valueFrom:
+                secretKeyRef:
+                  name: notification-credentials
+                  key: WEBHOOK_URL
+                  optional: true
+          volumeMounts:
+            - name: metrics
+              mountPath: /metrics
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+      volumes:
+        - name: metrics
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: failover-controller
+  namespace: default
+  labels:
+    app: failover-controller
+spec:
+  selector:
+    app: failover-controller
+  ports:
+    - name: metrics
+      port: 9090
+      targetPort: 9090
+  type: ClusterIP

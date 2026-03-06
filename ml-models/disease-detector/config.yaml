@@ -1,0 +1,50 @@
+# Training configuration
+training:
+  epochs: 50
+  batch_size: 32
+  learning_rate: 0.001
+  validation_split: 0.2
+  early_stopping_patience: 5
+  reduce_lr_patience: 3
+  reduce_lr_factor: 0.5
+  min_lr: 0.00001
+
+# Model configuration
+model:
+  input_shape: [224, 224, 3]
+  num_classes: 120
+  base_model: MobileNetV3Small
+  include_top: false
+  weights: imagenet
+  dropout_rate: 0.3
+  
+# Data augmentation
+augmentation:
+  rotation_range: 20
+  width_shift_range: 0.2
+  height_shift_range: 0.2
+  horizontal_flip: true
+  vertical_flip: false
+  zoom_range: 0.2
+  brightness_range: [0.8, 1.2]
+  fill_mode: nearest
+
+# Dataset configuration
+dataset:
+  name: PlantVillage
+  data_dir: ./data/plantvillage
+  image_size: [224, 224]
+  num_diseases: 120
+  
+# Paths
+paths:
+  data_dir: ./data
+  models_dir: ./models
+  logs_dir: ./logs
+  checkpoints_dir: ./checkpoints
+
+# TFLite conversion
+tflite:
+  quantization: true
+  optimization: default
+  target_size_mb: 15

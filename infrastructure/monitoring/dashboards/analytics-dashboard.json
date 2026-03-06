@@ -1,0 +1,237 @@
+{
+  "dashboard": {
+    "title": "KrishiAI Analytics Dashboard",
+    "tags": ["analytics", "user-behavior"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Total Users",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "count(analytics_user_metrics_total)",
+            "legendFormat": "Total Users"
+          }
+        ],
+        "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 }
+      },
+      {
+        "id": 2,
+        "title": "Active Users (7 days)",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "count(analytics_user_metrics_active_7d)",
+            "legendFormat": "Active Users"
+          }
+        ],
+        "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 }
+      },
+      {
+        "id": 3,
+        "title": "7-Day Retention Rate",
+        "type": "gauge",
+        "targets": [
+          {
+            "expr": "analytics_retention_rate_7d",
+            "legendFormat": "Retention %"
+          }
+        ],
+        "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "value": 0, "color": "red" },
+                { "value": 50, "color": "yellow" },
+                { "value": 70, "color": "green" }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Total Events",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(analytics_events_total)",
+            "legendFormat": "Total Events"
+          }
+        ],
+        "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 }
+      },
+      {
+        "id": 5,
+        "title": "Events Over Time",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(analytics_events_total[5m])",
+            "legendFormat": "Events/sec"
+          }
+        ],
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 }
+      },
+      {
+        "id": 6,
+        "title": "Feature Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "analytics_feature_usage{feature=\"disease_detected\"}",
+            "legendFormat": "Disease Detection"
+          },
+          {
+            "expr": "analytics_feature_usage{feature=\"crop_recommended\"}",
+            "legendFormat": "Crop Recommendation"
+          },
+          {
+            "expr": "analytics_feature_usage{feature=\"price_checked\"}",
+            "legendFormat": "Price Check"
+          },
+          {
+            "expr": "analytics_feature_usage{feature=\"weather_checked\"}",
+            "legendFormat": "Weather Check"
+          },
+          {
+            "expr": "analytics_feature_usage{feature=\"scheme_viewed\"}",
+            "legendFormat": "Scheme View"
+          }
+        ],
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 }
+      },
+      {
+        "id": 7,
+        "title": "Top Features (Last 24h)",
+        "type": "bargauge",
+        "targets": [
+          {
+            "expr": "topk(10, increase(analytics_feature_usage[24h]))",
+            "legendFormat": "{{feature}}"
+          }
+        ],
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient"
+        }
+      },
+      {
+        "id": 8,
+        "title": "User Sessions",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(analytics_session_start_total[5m])",
+            "legendFormat": "Sessions/sec"
+          }
+        ],
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 }
+      },
+      {
+        "id": 9,
+        "title": "Average Session Duration",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "avg(analytics_session_duration_seconds)",
+            "legendFormat": "Avg Duration"
+          }
+        ],
+        "gridPos": { "h": 4, "w": 6, "x": 0, "y": 20 },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s"
+          }
+        }
+      },
+      {
+        "id": 10,
+        "title": "Sync Success Rate",
+        "type": "gauge",
+        "targets": [
+          {
+            "expr": "rate(analytics_sync_completed_total[5m]) / (rate(analytics_sync_started_total[5m]) + 0.001) * 100",
+            "legendFormat": "Success Rate"
+          }
+        ],
+        "gridPos": { "h": 4, "w": 6, "x": 6, "y": 20 },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "value": 0, "color": "red" },
+                { "value": 80, "color": "yellow" },
+                { "value": 95, "color": "green" }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 11,
+        "title": "Error Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(analytics_error_occurred_total[5m])",
+            "legendFormat": "Errors/sec"
+          }
+        ],
+        "gridPos": { "h": 4, "w": 12, "x": 12, "y": 20 }
+      },
+      {
+        "id": 12,
+        "title": "Platform Distribution",
+        "type": "piechart",
+        "targets": [
+          {
+            "expr": "sum by (platform) (analytics_events_total)",
+            "legendFormat": "{{platform}}"
+          }
+        ],
+        "gridPos": { "h": 8, "w": 8, "x": 0, "y": 24 }
+      },
+      {
+        "id": 13,
+        "title": "Language Distribution",
+        "type": "piechart",
+        "targets": [
+          {
+            "expr": "sum by (language) (analytics_user_metrics_total)",
+            "legendFormat": "{{language}}"
+          }
+        ],
+        "gridPos": { "h": 8, "w": 8, "x": 8, "y": 24 }
+      },
+      {
+        "id": 14,
+        "title": "Feature Adoption Rate",
+        "type": "table",
+        "targets": [
+          {
+            "expr": "analytics_feature_adoption_rate",
+            "legendFormat": "{{feature}}"
+          }
+        ],
+        "gridPos": { "h": 8, "w": 8, "x": 16, "y": 24 }
+      }
+    ],
+    "refresh": "30s",
+    "time": {
+      "from": "now-24h",
+      "to": "now"
+    }
+  }
+}

@@ -1,0 +1,108 @@
+# Crop Recommendation Model Configuration
+
+# Model Parameters
+model:
+  name: crop_recommender
+  algorithm: xgboost
+  n_estimators: 100
+  max_depth: 6
+  learning_rate: 0.1
+  subsample: 0.8
+  colsample_bytree: 0.8
+  objective: multi:softprob
+  num_class: 50
+  random_state: 42
+
+# Training Parameters
+training:
+  test_size: 0.2
+  cv_folds: 5
+  random_state: 42
+  target_accuracy: 0.85
+
+# Features Configuration
+features:
+  soil:
+    - soil_nitrogen
+    - soil_phosphorus
+    - soil_potassium
+    - soil_ph
+  climate:
+    - rainfall_avg_3m
+    - temperature_avg_3m
+    - humidity_avg_3m
+  farm:
+    - farm_size
+    - irrigation_type
+    - previous_crop
+  market:
+    - price_trend_30d
+    - demand_forecast
+
+# Crop Classes (50 major crops)
+crops:
+  - Rice
+  - Wheat
+  - Cotton
+  - Sugarcane
+  - Maize
+  - Soybean
+  - Groundnut
+  - Sunflower
+  - Tomato
+  - Onion
+  - Potato
+  - Cabbage
+  - Cauliflower
+  - Brinjal
+  - Okra
+  - Chilli
+  - Turmeric
+  - Ginger
+  - Garlic
+  - Coriander
+  - Cumin
+  - Mustard
+  - Sesame
+  - Linseed
+  - Castor
+  - Safflower
+  - Niger
+  - Bajra
+  - Jowar
+  - Ragi
+  - Barley
+  - Gram
+  - Tur
+  - Moong
+  - Urad
+  - Masoor
+  - Peas
+  - Banana
+  - Mango
+  - Papaya
+  - Guava
+  - Pomegranate
+  - Grapes
+  - Orange
+  - Lemon
+  - Coconut
+  - Arecanut
+  - Cashew
+  - Tea
+  - Coffee
+
+# Data Paths
+paths:
+  data_dir: data
+  models_dir: models
+  logs_dir: logs
+  train_data: data/crop_training_data.csv
+  model_output: models/crop_recommender.pkl
+  scaler_output: models/feature_scaler.pkl
+  encoder_output: models/label_encoder.pkl
+
+# Logging
+logging:
+  level: INFO
+  format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'

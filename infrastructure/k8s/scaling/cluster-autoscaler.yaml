@@ -1,0 +1,271 @@
+# Cluster Autoscaler Configuration for KrishiAI Platform
+# Purpose: Automatically add/remove nodes based on pod resource requirements
+# Supports: AWS EKS, GCP GKE, Azure AKS
+
+---
+# ServiceAccount for Cluster Autoscaler
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cluster-autoscaler
+  namespace: kube-system
+  labels:
+    k8s-addon: cluster-autoscaler.addons.k8s.io
+    k8s-app: cluster-autoscaler
+
+---
+# ClusterRole for Cluster Autoscaler
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cluster-autoscaler
+  labels:
+    k8s-addon: cluster-autoscaler.addons.k8s.io
+    k8s-app: cluster-autoscaler
+rules:
+  - apiGroups: [""]
+    resources: ["events", "endpoints"]
+    verbs: ["create", "patch"]
+  - apiGroups: [""]
+    resources: ["pods/eviction"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["pods/status"]
+    verbs: ["update"]
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    resourceNames: ["cluster-autoscaler"]
+    verbs: ["get", "update"]
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["watch", "list", "get", "update"]
+  - apiGroups: [""]
+    resources:
+      - "namespaces"
+      - "pods"
+      - "services"
+      - "replicationcontrollers"
+      - "persistentvolumeclaims"
+      - "persistentvolumes"
+    verbs: ["watch", "list", "get"]
+  - apiGroups: ["extensions"]
+    resources: ["replicasets", "daemonsets"]
+    verbs: ["watch", "list", "get"]
+  - apiGroups: ["policy"]
+    resources: ["poddisruptionbudgets"]
+    verbs: ["watch", "list"]
+  - apiGroups: ["apps"]
+    resources: ["statefulsets", "replicasets", "daemonsets"]
+    verbs: ["watch", "list", "get"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses", "csinodes", "csidrivers", "csistoragecapacities"]
+    verbs: ["watch", "list", "get"]
+  - apiGroups: ["batch", "extensions"]
+    resources: ["jobs"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["create"]
+  - apiGroups: ["coordination.k8s.io"]
+    resourceNames: ["cluster-autoscaler"]
+    resources: ["leases"]
+    verbs: ["get", "update"]
+
+---
+# ClusterRoleBinding for Cluster Autoscaler
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cluster-autoscaler
+  labels:
+    k8s-addon: cluster-autoscaler.addons.k8s.io
+    k8s-app: cluster-autoscaler
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-autoscaler
+subjects:
+  - kind: ServiceAccount
+    name: cluster-autoscaler
+    namespace: kube-system
+
+---
+# Cluster Autoscaler Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cluster-autoscaler
+  namespace: kube-system
+  labels:
+    app: cluster-autoscaler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cluster-autoscaler
+  template:
+    metadata:
+      labels:
+        app: cluster-autoscaler
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8085"
+    spec:
+      priorityClassName: system-cluster-critical
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        fsGroup: 65534
+      serviceAccountName: cluster-autoscaler
+      containers:
+        - image: registry.k8s.io/autoscaling/cluster-autoscaler:v1.28.2
+          name: cluster-autoscaler
+          resources:
+            limits:
+              cpu: 100m
+              memory: 600Mi
+            requests:
+              cpu: 100m
+              memory: 600Mi
+          command:
+            - ./cluster-autoscaler
+            - --v=4
+            - --stderrthreshold=info
+            - --cloud-provider=aws  # Change to 'gce' for GCP, 'azure' for Azure
+            - --skip-nodes-with-local-storage=false
+            - --expander=least-waste
+            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/krishiai-cluster
+            - --balance-similar-node-groups
+            - --skip-nodes-with-system-pods=false
+            # Scale down configuration
+            - --scale-down-enabled=true
+            - --scale-down-delay-after-add=10m
+            - --scale-down-delay-after-delete=10s
+            - --scale-down-delay-after-failure=3m
+            - --scale-down-unneeded-time=10m
+            - --scale-down-unready-time=20m
+            - --scale-down-utilization-threshold=0.5
+            # Scale up configuration
+            - --max-node-provision-time=15m
+            - --max-graceful-termination-sec=600
+            - --max-total-unready-percentage=45
+            - --ok-total-unready-count=3
+            # Resource limits
+            - --cores-total=0:100
+            - --memory-total=0:400
+            - --max-nodes-total=50
+          volumeMounts:
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs/ca-certificates.crt
+              readOnly: true
+          imagePullPolicy: "Always"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+      volumes:
+        - name: ssl-certs
+          hostPath:
+            path: "/etc/ssl/certs/ca-bundle.crt"
+
+---
+# PodDisruptionBudget for Cluster Autoscaler
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: cluster-autoscaler
+  namespace: kube-system
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: cluster-autoscaler
+
+---
+# ConfigMap for Cluster Autoscaler Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-autoscaler-config
+  namespace: kube-system
+data:
+  # Node group configurations
+  node-groups.yaml: |
+    nodeGroups:
+      - name: krishiai-general
+        minSize: 3
+        maxSize: 20
+        instanceType: t3.large  # 2 vCPU, 8GB RAM
+        labels:
+          workload: general
+        taints: []
+      
+      - name: krishiai-ml
+        minSize: 1
+        maxSize: 10
+        instanceType: g4dn.xlarge  # GPU instance for ML workloads
+        labels:
+          workload: ml
+        taints:
+          - key: workload
+            value: ml
+            effect: NoSchedule
+      
+      - name: krishiai-memory
+        minSize: 1
+        maxSize: 5
+        instanceType: r5.large  # Memory-optimized for Redis/cache
+        labels:
+          workload: memory
+        taints:
+          - key: workload
+            value: memory
+            effect: NoSchedule
+
+---
+# Notes on Cluster Autoscaler Configuration:
+#
+# AWS Setup:
+# 1. Create IAM policy with autoscaling permissions
+# 2. Attach policy to node IAM role
+# 3. Tag ASGs with: k8s.io/cluster-autoscaler/enabled=true
+# 4. Tag ASGs with: k8s.io/cluster-autoscaler/krishiai-cluster=owned
+#
+# GCP Setup:
+# 1. Enable Compute Engine API
+# 2. Grant autoscaling permissions to service account
+# 3. Change --cloud-provider=gce
+# 4. Update node-group-auto-discovery for GCP
+#
+# Scaling Behavior:
+# - Scale up: When pods are unschedulable due to resource constraints
+# - Scale down: When node utilization < 50% for 10 minutes
+# - Delay after add: 10 minutes (allow pods to stabilize)
+# - Delay after delete: 10 seconds (quick response)
+#
+# Expander Strategies:
+# - least-waste: Minimize unused resources (default)
+# - most-pods: Maximize number of pods
+# - priority: Use priority-based selection
+# - random: Random selection
+#
+# Resource Limits:
+# - Max 50 nodes total
+# - Max 100 cores total
+# - Max 400GB memory total
+#
+# Node Group Strategy:
+# - General: Standard workloads (auth, market, climate, govt services)
+# - ML: GPU workloads (crop service, disease detection)
+# - Memory: Cache-heavy workloads (Redis, in-memory processing)
+#
+# Testing:
+# kubectl -n kube-system logs -f deployment/cluster-autoscaler
+# kubectl get nodes --watch
+# kubectl describe configmap cluster-autoscaler-status -n kube-system
+#
+# Deployment:
+# kubectl apply -f cluster-autoscaler.yaml
+# kubectl -n kube-system get deployment cluster-autoscaler

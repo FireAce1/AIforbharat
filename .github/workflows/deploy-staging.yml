@@ -1,0 +1,223 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [ develop ]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '18.x'
+  PYTHON_VERSION: '3.10'
+  REGISTRY: ghcr.io
+  IMAGE_TAG: staging-${{ github.sha }}
+
+jobs:
+  # Run CI tests first
+  ci-tests:
+    name: Run CI Tests
+    uses: ./.github/workflows/ci.yml
+
+  # Build and push Docker images
+  build-and-push:
+    name: Build and Push Images
+    runs-on: ubuntu-latest
+    needs: [ci-tests]
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        service: [auth-service, crop-service, market-service, climate-service, govt-service]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.service }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix=staging-
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: services/${{ matrix.service }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Deploy to staging Kubernetes cluster
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build-and-push]
+    environment:
+      name: staging
+      url: https://staging.krishiai.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG_STAGING }}
+
+      - name: Update image tags in manifests
+        run: |
+          for service in auth-service crop-service market-service climate-service govt-service; do
+            sed -i "s|image: .*/${service}:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/${service}:${{ env.IMAGE_TAG }}|g" infrastructure/k8s/${service}-deployment.yaml
+          done
+
+      - name: Deploy ConfigMap
+        run: kubectl apply -f infrastructure/k8s/configmap.yaml -n staging
+
+      - name: Deploy Secrets
+        run: |
+          kubectl create secret generic krishiai-secrets \
+            --from-literal=database-url="${{ secrets.STAGING_DATABASE_URL }}" \
+            --from-literal=redis-url="${{ secrets.STAGING_REDIS_URL }}" \
+            --from-literal=jwt-secret="${{ secrets.STAGING_JWT_SECRET }}" \
+            --from-literal=sms-api-key="${{ secrets.STAGING_SMS_API_KEY }}" \
+            --from-literal=imd-api-key="${{ secrets.STAGING_IMD_API_KEY }}" \
+            --from-literal=sentry-dsn="${{ secrets.STAGING_SENTRY_DSN }}" \
+            --dry-run=client -o yaml | kubectl apply -f - -n staging
+
+      - name: Deploy services
+        run: |
+          kubectl apply -f infrastructure/k8s/auth-service-deployment.yaml -n staging
+          kubectl apply -f infrastructure/k8s/crop-service-deployment.yaml -n staging
+          kubectl apply -f infrastructure/k8s/market-service-deployment.yaml -n staging
+          kubectl apply -f infrastructure/k8s/climate-service-deployment.yaml -n staging
+          kubectl apply -f infrastructure/k8s/govt-service-deployment.yaml -n staging
+
+      - name: Wait for rollout to complete
+        run: |
+          kubectl rollout status deployment/auth-service -n staging --timeout=5m
+          kubectl rollout status deployment/crop-service -n staging --timeout=5m
+          kubectl rollout status deployment/market-service -n staging --timeout=5m
+          kubectl rollout status deployment/climate-service -n staging --timeout=5m
+          kubectl rollout status deployment/govt-service -n staging --timeout=5m
+
+      - name: Verify deployment
+        run: |
+          kubectl get pods -n staging
+          kubectl get services -n staging
+
+  # Run smoke tests
+  smoke-tests:
+    name: Run Smoke Tests
+    runs-on: ubuntu-latest
+    needs: [deploy-staging]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Test health endpoints
+        run: |
+          services=("auth-service" "crop-service" "market-service" "climate-service" "govt-service")
+          for service in "${services[@]}"; do
+            echo "Testing $service health endpoint..."
+            response=$(curl -s -o /dev/null -w "%{http_code}" https://staging.krishiai.com/api/v1/$service/health)
+            if [ "$response" != "200" ]; then
+              echo "❌ $service health check failed with status $response"
+              exit 1
+            fi
+            echo "✅ $service health check passed"
+          done
+
+      - name: Test authentication flow
+        run: |
+          echo "Testing OTP send endpoint..."
+          response=$(curl -s -X POST https://staging.krishiai.com/api/v1/auth/send-otp \
+            -H "Content-Type: application/json" \
+            -d '{"phone": "+919999999999"}' \
+            -w "%{http_code}" -o /dev/null)
+          if [ "$response" != "200" ] && [ "$response" != "429" ]; then
+            echo "❌ OTP send test failed with status $response"
+            exit 1
+          fi
+          echo "✅ OTP send test passed"
+
+  # Notify deployment status
+  notify:
+    name: Notify Deployment Status
+    runs-on: ubuntu-latest
+    needs: [smoke-tests]
+    if: always()
+    steps:
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "Staging Deployment ${{ needs.smoke-tests.result == 'success' && '✅ Successful' || '❌ Failed' }}",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "${{ needs.smoke-tests.result == 'success' && '✅' || '❌' }} Staging Deployment"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Status:*\n${{ needs.smoke-tests.result }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Environment:*\nStaging"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n${{ github.ref_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n<${{ github.event.head_commit.url }}|${{ github.sha }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author:*\n${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*URL:*\n<https://staging.krishiai.com|staging.krishiai.com>"
+                    }
+                  ]
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "Workflow: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Details>"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

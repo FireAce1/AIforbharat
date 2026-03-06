@@ -1,0 +1,251 @@
+{
+  "punjab": {
+    "primary_crops": [
+      {
+        "name": "Wheat",
+        "local_name_pa": "ਕਣਕ",
+        "varieties": ["PBW 343", "HD 2967", "DBW 187", "PBW 725"],
+        "sowing_season": "November-December",
+        "harvest_season": "April-May",
+        "water_requirement": "high",
+        "soil_types": ["alluvial", "loamy"],
+        "avg_yield_per_hectare": 4.5,
+        "market_demand": "very_high"
+      },
+      {
+        "name": "Paddy (Rice)",
+        "local_name_pa": "ਧਾਨ",
+        "varieties": ["PR 126", "Pusa 44", "PR 121", "Basmati 1509"],
+        "sowing_season": "June-July",
+        "harvest_season": "October-November",
+        "water_requirement": "very_high",
+        "soil_types": ["alluvial", "clay"],
+        "avg_yield_per_hectare": 6.2,
+        "market_demand": "very_high"
+      },
+      {
+        "name": "Cotton",
+        "local_name_pa": "ਕਪਾਹ",
+        "varieties": ["RCH 134", "MRC 7361", "Ankur 3028"],
+        "sowing_season": "April-May",
+        "harvest_season": "October-December",
+        "water_requirement": "medium",
+        "soil_types": ["black", "alluvial"],
+        "avg_yield_per_hectare": 2.8,
+        "market_demand": "high"
+      },
+      {
+        "name": "Maize",
+        "local_name_pa": "ਮੱਕੀ",
+        "varieties": ["PMH 1", "Shaktiman 1", "Kanchan"],
+        "sowing_season": "June-July",
+        "harvest_season": "September-October",
+        "water_requirement": "medium",
+        "soil_types": ["alluvial", "loamy"],
+        "avg_yield_per_hectare": 5.5,
+        "market_demand": "medium"
+      }
+    ],
+    "alternative_crops": [
+      {
+        "name": "Moong (Green Gram)",
+        "local_name_pa": "ਮੂੰਗ",
+        "diversification_incentive": 15000,
+        "water_savings_percent": 70
+      },
+      {
+        "name": "Sunflower",
+        "local_name_pa": "ਸੂਰਜਮੁਖੀ",
+        "diversification_incentive": 12000,
+        "water_savings_percent": 60
+      }
+    ]
+  },
+  "karnataka": {
+    "primary_crops": [
+      {
+        "name": "Ragi (Finger Millet)",
+        "local_name_kn": "ರಾಗಿ",
+        "varieties": ["GPU 28", "MR 6", "KMR 204"],
+        "sowing_season": "June-July",
+        "harvest_season": "October-November",
+        "water_requirement": "low",
+        "soil_types": ["red", "laterite"],
+        "avg_yield_per_hectare": 2.5,
+        "market_demand": "high",
+        "nutritional_value": "very_high"
+      },
+      {
+        "name": "Coffee",
+        "local_name_kn": "ಕಾಫಿ",
+        "varieties": ["Arabica", "Robusta", "Selection 795"],
+        "sowing_season": "June-July",
+        "harvest_season": "November-February",
+        "water_requirement": "high",
+        "soil_types": ["laterite", "red"],
+        "avg_yield_per_hectare": 1.2,
+        "market_demand": "very_high",
+        "export_potential": "high"
+      },
+      {
+        "name": "Arecanut",
+        "local_name_kn": "ಅಡಿಕೆ",
+        "varieties": ["Mangala", "Sumangala", "Sreemangala"],
+        "sowing_season": "June-July",
+        "harvest_season": "Year-round",
+        "water_requirement": "high",
+        "soil_types": ["laterite", "red"],
+        "avg_yield_per_hectare": 2.0,
+        "market_demand": "high"
+      },
+      {
+        "name": "Paddy (Rice)",
+        "local_name_kn": "ಭತ್ತ",
+        "varieties": ["BPT 5204", "KHP 2", "KMP 203"],
+        "sowing_season": "June-July",
+        "harvest_season": "October-November",
+        "water_requirement": "very_high",
+        "soil_types": ["clay", "loamy"],
+        "avg_yield_per_hectare": 5.5,
+        "market_demand": "very_high"
+      },
+      {
+        "name": "Sugarcane",
+        "local_name_kn": "ಕಬ್ಬು",
+        "varieties": ["Co 86032", "Co 94012", "Co 99004"],
+        "sowing_season": "October-November",
+        "harvest_season": "12-14 months",
+        "water_requirement": "very_high",
+        "soil_types": ["black", "red"],
+        "avg_yield_per_hectare": 80.0,
+        "market_demand": "high"
+      }
+    ],
+    "horticulture_crops": [
+      {
+        "name": "Mango",
+        "local_name_kn": "ಮಾವು",
+        "varieties": ["Alphonso", "Totapuri", "Banganapalli"],
+        "export_potential": "very_high"
+      },
+      {
+        "name": "Banana",
+        "local_name_kn": "ಬಾಳೆ",
+        "varieties": ["Robusta", "Nendran", "Grand Naine"],
+        "market_demand": "very_high"
+      }
+    ]
+  },
+  "telangana": {
+    "primary_crops": [
+      {
+        "name": "Cotton",
+        "local_name_te": "పత్తి",
+        "varieties": ["Jadcot 438", "RCH 2", "Mallika"],
+        "sowing_season": "June-July",
+        "harvest_season": "November-January",
+        "water_requirement": "medium",
+        "soil_types": ["black", "red"],
+        "avg_yield_per_hectare": 2.5,
+        "market_demand": "very_high"
+      },
+      {
+        "name": "Paddy (Rice)",
+        "local_name_te": "వరి",
+        "varieties": ["BPT 5204", "MTU 1010", "RNR 15048"],
+        "sowing_season": "June-July",
+        "harvest_season": "October-November",
+        "water_requirement": "very_high",
+        "soil_types": ["clay", "loamy"],
+        "avg_yield_per_hectare": 5.8,
+        "market_demand": "very_high"
+      },
+      {
+        "name": "Maize",
+        "local_name_te": "మొక్కజొన్న",
+        "varieties": ["DHM 117", "Deccan 103", "Vivek Hybrid 27"],
+        "sowing_season": "June-July",
+        "harvest_season": "September-October",
+        "water_requirement": "medium",
+        "soil_types": ["red", "black"],
+        "avg_yield_per_hectare": 6.0,
+        "market_demand": "high"
+      },
+      {
+        "name": "Turmeric",
+        "local_name_te": "పసుపు",
+        "varieties": ["Duggirala", "Tekurpeta", "Armoor"],
+        "sowing_season": "May-June",
+        "harvest_season": "January-March",
+        "water_requirement": "medium",
+        "soil_types": ["red", "loamy"],
+        "avg_yield_per_hectare": 8.0,
+        "market_demand": "very_high",
+        "export_potential": "high"
+      },
+      {
+        "name": "Red Gram (Pigeon Pea)",
+        "local_name_te": "కందులు",
+        "varieties": ["LRG 41", "PRG 176", "Maruti"],
+        "sowing_season": "June-July",
+        "harvest_season": "December-January",
+        "water_requirement": "low",
+        "soil_types": ["red", "black"],
+        "avg_yield_per_hectare": 1.5,
+        "market_demand": "high"
+      }
+    ],
+    "cash_crops": [
+      {
+        "name": "Chilli",
+        "local_name_te": "మిర్చి",
+        "varieties": ["Teja", "Guntur Sannam", "Byadgi"],
+        "export_potential": "very_high"
+      },
+      {
+        "name": "Tobacco",
+        "local_name_te": "పొగాకు",
+        "varieties": ["FCV", "Burley"],
+        "market_demand": "high"
+      }
+    ]
+  },
+  "andhra_pradesh": {
+    "primary_crops": [
+      {
+        "name": "Paddy (Rice)",
+        "local_name_te": "వరి",
+        "varieties": ["BPT 5204", "MTU 1010", "Swarna"],
+        "sowing_season": "June-July",
+        "harvest_season": "October-November",
+        "water_requirement": "very_high",
+        "soil_types": ["clay", "alluvial"],
+        "avg_yield_per_hectare": 6.0,
+        "market_demand": "very_high"
+      },
+      {
+        "name": "Sugarcane",
+        "local_name_te": "చెరకు",
+        "varieties": ["Co 86032", "Co 94012", "Co 99004"],
+        "sowing_season": "October-November",
+        "harvest_season": "12-14 months",
+        "water_requirement": "very_high",
+        "soil_types": ["black", "alluvial"],
+        "avg_yield_per_hectare": 85.0,
+        "market_demand": "high"
+      },
+      {
+        "name": "Mango",
+        "local_name_te": "మామిడి",
+        "varieties": ["Banganapalli", "Totapuri", "Alphonso"],
+        "sowing_season": "June-July",
+        "harvest_season": "April-June",
+        "water_requirement": "medium",
+        "soil_types": ["red", "laterite"],
+        "avg_yield_per_hectare": 12.0,
+        "market_demand": "very_high",
+        "export_potential": "very_high"
+      }
+    ]
+  }
+}

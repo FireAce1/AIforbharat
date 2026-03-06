@@ -3,8 +3,8 @@
 -- Enable TimescaleDB extension
 CREATE EXTENSION IF NOT EXISTS timescaledb;
 
--- Enable PostGIS extension for geospatial queries
-CREATE EXTENSION IF NOT EXISTS postgis;
+-- Note: PostGIS is not available in this TimescaleDB image
+-- We'll use latitude/longitude columns instead of geography type
 
 -- Create initial database schema
 CREATE SCHEMA IF NOT EXISTS krishiai;
@@ -40,7 +40,8 @@ CREATE INDEX IF NOT EXISTS idx_otp_phone_expires ON otp_codes(phone, expires_at)
 CREATE TABLE IF NOT EXISTS farms (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES users(id),
-    location GEOGRAPHY(POINT),
+    latitude DECIMAL(10,8),
+    longitude DECIMAL(11,8),
     size_hectares DECIMAL(10,2),
     soil_type VARCHAR(50),
     irrigation_type VARCHAR(50),
@@ -48,7 +49,7 @@ CREATE TABLE IF NOT EXISTS farms (
 );
 
 CREATE INDEX IF NOT EXISTS idx_farms_user ON farms(user_id);
-CREATE INDEX IF NOT EXISTS idx_farms_location ON farms USING GIST(location);
+CREATE INDEX IF NOT EXISTS idx_farms_location ON farms(latitude, longitude);
 
 -- Create crops table
 CREATE TABLE IF NOT EXISTS crops (
@@ -82,7 +83,8 @@ CREATE TABLE IF NOT EXISTS market_prices (
     time TIMESTAMPTZ NOT NULL,
     crop_name VARCHAR(100),
     market_name VARCHAR(100),
-    location GEOGRAPHY(POINT),
+    latitude DECIMAL(10,8),
+    longitude DECIMAL(11,8),
     price_per_kg DECIMAL(10,2),
     quantity_traded DECIMAL(10,2)
 );
@@ -93,7 +95,8 @@ SELECT create_hypertable('market_prices', 'time', if_not_exists => TRUE);
 -- Create weather forecasts table (TimescaleDB hypertable)
 CREATE TABLE IF NOT EXISTS weather_forecasts (
     time TIMESTAMPTZ NOT NULL,
-    location GEOGRAPHY(POINT),
+    latitude DECIMAL(10,8),
+    longitude DECIMAL(11,8),
     temperature DECIMAL(5,2),
     rainfall DECIMAL(5,2),
     humidity DECIMAL(5,2),

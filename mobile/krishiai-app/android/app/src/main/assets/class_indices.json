@@ -1,0 +1,67 @@
+{
+  "classes": [
+    {
+      "index": 0,
+      "name": "Tomato Late Blight",
+      "nameLocal": "टमाटर का पछेती अंगमारी",
+      "nameScientific": "Phytophthora infestans",
+      "treatments": {
+        "organic": [
+          "Remove and destroy infected plants",
+          "Apply copper-based fungicides",
+          "Improve air circulation",
+          "Avoid overhead watering"
+        ],
+        "chemical": [
+          "Mancozeb 75% WP @ 2.5g/L",
+          "Chlorothalonil 75% WP @ 2g/L",
+          "Metalaxyl + Mancozeb @ 2.5g/L"
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "name": "Potato Early Blight",
+      "nameLocal": "आलू का अगेती अंगमारी",
+      "nameScientific": "Alternaria solani",
+      "treatments": {
+        "organic": [
+          "Crop rotation with non-solanaceous crops",
+          "Remove infected plant debris",
+          "Apply neem oil spray",
+          "Use disease-free seeds"
+        ],
+        "chemical": [
+          "Mancozeb 75% WP @ 2.5g/L",
+          "Iprodione 50% WP @ 1.5g/L",
+          "Azoxystrobin 23% SC @ 1ml/L"
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "name": "Wheat Rust",
+      "nameLocal": "गेहूं का रतुआ",
+      "nameScientific": "Puccinia spp.",
+      "treatments": {
+        "organic": [
+          "Use resistant varieties",
+          "Early sowing to avoid disease",
+          "Remove alternate hosts",
+          "Apply sulfur dust"
+        ],
+        "chemical": [
+          "Propiconazole 25% EC @ 1ml/L",
+          "Tebuconazole 25% EC @ 1ml/L",
+          "Mancozeb 75% WP @ 2.5g/L"
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "numClasses": 120,
+    "description": "Disease class mappings for plant disease detection model",
+    "note": "This is a sample file with 3 classes. The actual file should contain all 120 disease classes after model training."
+  }
+}

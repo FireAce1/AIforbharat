@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Data
+data/
+*.zip
+*.tar.gz
+
+# Models
+models/*.h5
+models/*.tflite
+checkpoints/
+*.pb
+*.pbtxt
+
+# Logs
+logs/
+*.log
+tensorboard/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Keep directory structure
+!models/.gitkeep
+!checkpoints/.gitkeep
+!logs/.gitkeep
+!data/.gitkeep
+
+# Keep important files
+!models/class_indices.json
+!models/training_history.json
+!models/evaluation_report.txt

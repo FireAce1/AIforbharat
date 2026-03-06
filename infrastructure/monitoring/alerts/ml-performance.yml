@@ -1,0 +1,61 @@
+# ML Model Performance Alerts
+# Triggers when ML model performance degrades
+
+groups:
+  - name: ml_performance
+    interval: 30s
+    rules:
+      # Alert when ML inference latency is too high
+      - alert: HighMLInferenceLatency
+        expr: model_inference_latency_seconds > 2.0
+        for: 5m
+        labels:
+          severity: warning
+          category: ml_performance
+        annotations:
+          summary: "High ML inference latency for {{ $labels.model }}"
+          description: "Inference latency is {{ $value }}s (threshold: 2.0s) for model {{ $labels.model }}"
+
+      # Alert when model accuracy drops
+      - alert: LowModelAccuracy
+        expr: model_accuracy < 0.85
+        for: 10m
+        labels:
+          severity: warning
+          category: ml_quality
+        annotations:
+          summary: "Low accuracy for {{ $labels.model }}"
+          description: "Model accuracy is {{ $value | humanizePercentage }} (threshold: 85%) for model {{ $labels.model }}"
+
+      # Alert when disease detection model accuracy drops below 90%
+      - alert: LowDiseaseDetectionAccuracy
+        expr: model_accuracy{model="disease_detector"} < 0.90
+        for: 10m
+        labels:
+          severity: critical
+          category: ml_quality
+        annotations:
+          summary: "Disease detection accuracy below threshold"
+          description: "Disease detection model accuracy is {{ $value | humanizePercentage }} (threshold: 90%)"
+
+      # Alert when crop recommendation accuracy drops below 85%
+      - alert: LowCropRecommendationAccuracy
+        expr: model_accuracy{model="crop_recommender"} < 0.85
+        for: 10m
+        labels:
+          severity: warning
+          category: ml_quality
+        annotations:
+          summary: "Crop recommendation accuracy below threshold"
+          description: "Crop recommendation model accuracy is {{ $value | humanizePercentage }} (threshold: 85%)"
+
+      # Alert when ML inference rate is too high (potential abuse)
+      - alert: HighMLInferenceRate
+        expr: rate(model_inference_total[5m]) > 100
+        for: 5m
+        labels:
+          severity: warning
+          category: ml_usage
+        annotations:
+          summary: "High ML inference rate for {{ $labels.model }}"
+          description: "Inference rate is {{ $value }} req/s for model {{ $labels.model }}"

@@ -1,0 +1,77 @@
+# Prometheus Configuration for KrishiAI Platform
+# Scrapes metrics from all microservices
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'krishiai-mvp'
+    environment: 'production'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - "alerts/*.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Auth Service
+  - job_name: 'auth-service'
+    static_configs:
+      - targets: ['auth-service:3001']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Crop Service (Python/FastAPI)
+  - job_name: 'crop-service'
+    static_configs:
+      - targets: ['crop-service:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Market Service
+  - job_name: 'market-service'
+    static_configs:
+      - targets: ['market-service:3002']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Climate Service
+  - job_name: 'climate-service'
+    static_configs:
+      - targets: ['climate-service:3003']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Government Service
+  - job_name: 'govt-service'
+    static_configs:
+      - targets: ['govt-service:3004']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # PostgreSQL Exporter
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+
+  # Redis Exporter
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+
+  # Node Exporter (system metrics)
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']

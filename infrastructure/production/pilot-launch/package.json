@@ -1,0 +1,47 @@
+{
+  "name": "krishiai-pilot-monitoring",
+  "version": "1.0.0",
+  "description": "KrishiAI Pilot Launch Monitoring and Feedback Collection",
+  "main": "index.js",
+  "scripts": {
+    "start:monitoring": "ts-node monitoring-dashboard.ts",
+    "start:feedback": "ts-node feedback-collection.ts",
+    "start:iteration": "ts-node iteration-manager.ts",
+    "start:all": "concurrently \"npm run start:monitoring\" \"npm run start:feedback\" \"npm run start:iteration\"",
+    "migrate:feedback": "psql -U postgres -d krishiai_db -f migrations/create-feedback-tables.sql",
+    "migrate:iteration": "psql -U postgres -d krishiai_db -f migrations/create-iteration-tables.sql",
+    "migrate": "npm run migrate:feedback && npm run migrate:iteration",
+    "test": "jest",
+    "lint": "eslint . --ext .ts"
+  },
+  "keywords": [
+    "monitoring",
+    "feedback",
+    "analytics",
+    "pilot"
+  ],
+  "author": "KrishiAI Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.11.3",
+    "ioredis": "^5.3.2",
+    "axios": "^1.6.2",
+    "nodemailer": "^6.9.7",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.5",
+    "@types/nodemailer": "^6.4.14",
+    "@types/pg": "^8.10.9",
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2",
+    "concurrently": "^8.2.2",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.11",
+    "eslint": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0"
+  }
+}

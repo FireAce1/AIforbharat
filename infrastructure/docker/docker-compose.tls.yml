@@ -1,0 +1,98 @@
+# Docker Compose configuration with TLS/HTTPS support
+# Extends the base docker-compose.yml with NGINX reverse proxy
+
+version: '3.8'
+
+services:
+  # NGINX Reverse Proxy with TLS
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    container_name: krishiai-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../tls/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../tls/ssl-params.conf:/etc/nginx/ssl-params.conf:ro
+      - ../tls/certs/production:/etc/nginx/certs:ro
+      - certbot-webroot:/var/www/certbot:ro
+      - nginx-logs:/var/log/nginx
+    networks:
+      - krishiai-network
+    depends_on:
+      - auth-service
+      - crop-service
+      - market-service
+      - climate-service
+      - govt-service
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # Certbot for Let's Encrypt certificate management
+  certbot:
+    image: certbot/certbot:latest
+    container_name: krishiai-certbot
+    volumes:
+      - ../tls/certs/production:/etc/letsencrypt
+      - certbot-webroot:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - krishiai-network
+    restart: unless-stopped
+
+  # Auth Service (from base docker-compose.yml)
+  auth-service:
+    environment:
+      - FORCE_HTTPS=true
+      - TRUST_PROXY=true
+    networks:
+      - krishiai-network
+
+  # Crop Service (from base docker-compose.yml)
+  crop-service:
+    environment:
+      - FORCE_HTTPS=true
+      - TRUST_PROXY=true
+    networks:
+      - krishiai-network
+
+  # Market Service (from base docker-compose.yml)
+  market-service:
+    environment:
+      - FORCE_HTTPS=true
+      - TRUST_PROXY=true
+    networks:
+      - krishiai-network
+
+  # Climate Service (from base docker-compose.yml)
+  climate-service:
+    environment:
+      - FORCE_HTTPS=true
+      - TRUST_PROXY=true
+    networks:
+      - krishiai-network
+
+  # Government Service (from base docker-compose.yml)
+  govt-service:
+    environment:
+      - FORCE_HTTPS=true
+      - TRUST_PROXY=true
+    networks:
+      - krishiai-network
+
+volumes:
+  certbot-webroot:
+    driver: local
+  nginx-logs:
+    driver: local
+
+networks:
+  krishiai-network:
+    driver: bridge

@@ -1,0 +1,327 @@
+{
+  "dashboard": {
+    "title": "KrishiAI - Business Metrics",
+    "tags": ["krishiai", "business", "kpi"],
+    "timezone": "browser",
+    "refresh": "1m",
+    "time": {
+      "from": "now-24h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "Active Users",
+        "type": "stat",
+        "gridPos": {"h": 6, "w": 6, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "active_users"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value",
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"value": 0, "color": "red"},
+              {"value": 500, "color": "yellow"},
+              {"value": 700, "color": "green"}
+            ]
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "displayName": "Active Users (Target: 700)"
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Disease Detections Today",
+        "type": "stat",
+        "gridPos": {"h": 6, "w": 6, "x": 6, "y": 0},
+        "targets": [
+          {
+            "expr": "increase(disease_detections_total[24h])"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value",
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"value": 0, "color": "red"},
+              {"value": 20, "color": "yellow"},
+              {"value": 50, "color": "green"}
+            ]
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "displayName": "Detections (Target: 500 in pilot)"
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Crop Recommendations Today",
+        "type": "stat",
+        "gridPos": {"h": 6, "w": 6, "x": 12, "y": 0},
+        "targets": [
+          {
+            "expr": "increase(crop_recommendations_total[24h])"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value",
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"value": 0, "color": "red"},
+              {"value": 10, "color": "yellow"},
+              {"value": 30, "color": "green"}
+            ]
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "displayName": "Recommendations"
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Market Price Queries Today",
+        "type": "stat",
+        "gridPos": {"h": 6, "w": 6, "x": 18, "y": 0},
+        "targets": [
+          {
+            "expr": "increase(market_price_queries_total[24h])"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value",
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"value": 0, "color": "red"},
+              {"value": 50, "color": "yellow"},
+              {"value": 100, "color": "green"}
+            ]
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "displayName": "Price Queries"
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "Feature Usage Over Time",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 6},
+        "targets": [
+          {
+            "expr": "rate(disease_detections_total[5m]) * 3600",
+            "legendFormat": "Disease Detections/hour"
+          },
+          {
+            "expr": "rate(crop_recommendations_total[5m]) * 3600",
+            "legendFormat": "Crop Recommendations/hour"
+          },
+          {
+            "expr": "rate(market_price_queries_total[5m]) * 3600",
+            "legendFormat": "Market Queries/hour"
+          },
+          {
+            "expr": "rate(weather_queries_total[5m]) * 3600",
+            "legendFormat": "Weather Queries/hour"
+          },
+          {
+            "expr": "rate(scheme_searches_total[5m]) * 3600",
+            "legendFormat": "Scheme Searches/hour"
+          }
+        ],
+        "yaxes": [
+          {"label": "Operations/hour", "format": "short"},
+          {"show": false}
+        ]
+      },
+      {
+        "id": 6,
+        "title": "User Engagement (Session Duration)",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 6},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, rate(session_duration_seconds_bucket[5m]))",
+            "legendFormat": "P50 Session Duration"
+          },
+          {
+            "expr": "histogram_quantile(0.95, rate(session_duration_seconds_bucket[5m]))",
+            "legendFormat": "P95 Session Duration"
+          }
+        ],
+        "yaxes": [
+          {"label": "Duration (seconds)", "format": "s"},
+          {"show": false}
+        ],
+        "thresholds": [
+          {"value": 300, "colorMode": "custom", "op": "gt", "fill": false, "line": true, "lineColor": "green"}
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Sync Queue Status",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 14},
+        "targets": [
+          {
+            "expr": "sync_queue_pending_items",
+            "legendFormat": "Pending Items"
+          },
+          {
+            "expr": "rate(sync_queue_processed_total[5m]) * 60",
+            "legendFormat": "Processed/min"
+          },
+          {
+            "expr": "rate(sync_queue_failed_total[5m]) * 60",
+            "legendFormat": "Failed/min"
+          }
+        ],
+        "yaxes": [
+          {"label": "Count", "format": "short"},
+          {"show": false}
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Top Features by Usage",
+        "type": "piechart",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 14},
+        "targets": [
+          {
+            "expr": "sum(increase(disease_detections_total[24h]))",
+            "legendFormat": "Disease Detection"
+          },
+          {
+            "expr": "sum(increase(crop_recommendations_total[24h]))",
+            "legendFormat": "Crop Recommendations"
+          },
+          {
+            "expr": "sum(increase(market_price_queries_total[24h]))",
+            "legendFormat": "Market Prices"
+          },
+          {
+            "expr": "sum(increase(weather_queries_total[24h]))",
+            "legendFormat": "Weather"
+          },
+          {
+            "expr": "sum(increase(scheme_searches_total[24h]))",
+            "legendFormat": "Schemes"
+          }
+        ],
+        "options": {
+          "pieType": "donut",
+          "displayLabels": ["name", "percent"]
+        }
+      },
+      {
+        "id": 9,
+        "title": "User Retention (7-Day)",
+        "type": "stat",
+        "gridPos": {"h": 6, "w": 8, "x": 0, "y": 22},
+        "targets": [
+          {
+            "expr": "(count(active_users_7d) / 1000) * 100"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value",
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"value": 0, "color": "red"},
+              {"value": 50, "color": "yellow"},
+              {"value": 70, "color": "green"}
+            ]
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "displayName": "7-Day Retention (Target: 70%)"
+          }
+        }
+      },
+      {
+        "id": 10,
+        "title": "Average Session Duration",
+        "type": "stat",
+        "gridPos": {"h": 6, "w": 8, "x": 8, "y": 22},
+        "targets": [
+          {
+            "expr": "avg(session_duration_seconds)"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value",
+          "unit": "s",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"value": 0, "color": "red"},
+              {"value": 180, "color": "yellow"},
+              {"value": 300, "color": "green"}
+            ]
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "displayName": "Avg Session (Target: >5 min)"
+          }
+        }
+      },
+      {
+        "id": 11,
+        "title": "Offline Usage Percentage",
+        "type": "stat",
+        "gridPos": {"h": 6, "w": 8, "x": 16, "y": 22},
+        "targets": [
+          {
+            "expr": "(sum(offline_sessions_total) / sum(total_sessions)) * 100"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value",
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"value": 0, "color": "yellow"},
+              {"value": 40, "color": "green"}
+            ]
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "displayName": "Offline Usage (Target: >40%)"
+          }
+        }
+      }
+    ]
+  }
+}

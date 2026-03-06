@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backup-scripts
+  namespace: default
+  labels:
+    app: database-backup
+data:
+  archive-wal.sh: |
+    #!/bin/bash
+    # WAL Archive Script - embedded in ConfigMap
+    set -e
+    set -u
+    
+    WAL_PATH="$1"
+    WAL_FILE="$2"
+    
+    S3_BUCKET="${S3_BUCKET:-krishiai-db-backups}"
+    S3_PREFIX="${S3_PREFIX:-wal-archive}"
+    AWS_REGION="${AWS_REGION:-us-east-1}"
+    
+    S3_DESTINATION="s3://${S3_BUCKET}/${S3_PREFIX}/${WAL_FILE}"
+    
+    # Check if already exists
+    if aws s3 ls "$S3_DESTINATION" --region "$AWS_REGION" >/dev/null 2>&1; then
+      exit 0
+    fi
+    
+    # Upload to S3
+    aws s3 cp "$WAL_PATH" "$S3_DESTINATION" \
+      --region "$AWS_REGION" \
+      --storage-class STANDARD_IA \
+      --server-side-encryption AES256 \
+      --only-show-errors
+    
+    exit 0
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backup-config
+  namespace: default
+  labels:
+    app: database-backup
+data:
+  # Database connection settings
+  DB_HOST: "postgres-service"
+  DB_PORT: "5432"
+  DB_NAME: "krishiai_db"
+  
+  # S3 settings
+  S3_BUCKET: "krishiai-db-backups"
+  AWS_REGION: "us-east-1"
+  
+  # Retention policies
+  DAILY_RETENTION_DAYS: "30"
+  WEEKLY_RETENTION_WEEKS: "52"
+  WAL_RETENTION_DAYS: "7"
+  
+  # Timezone for cron jobs
+  TZ: "Asia/Kolkata"

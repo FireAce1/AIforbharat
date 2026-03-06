@@ -1,0 +1,209 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dr-health-check
+  namespace: default
+  labels:
+    app: dr-health-check
+    component: disaster-recovery
+spec:
+  # Run every 5 minutes
+  schedule: "*/5 * * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: dr-health-check
+            component: disaster-recovery
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: health-check
+              image: postgres:14-alpine
+              command:
+                - /bin/sh
+                - /scripts/health-check.sh
+              env:
+                - name: PRIMARY_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: failover-controller-config
+                      key: PRIMARY_HOST
+                - name: PRIMARY_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: failover-controller-config
+                      key: PRIMARY_PORT
+                - name: REPLICA_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: failover-controller-config
+                      key: REPLICA_HOST
+                - name: REPLICA_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: failover-controller-config
+                      key: REPLICA_PORT
+                - name: POSTGRES_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-credentials
+                      key: POSTGRES_USER
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-credentials
+                      key: POSTGRES_PASSWORD
+                - name: REPLICATION_LAG_THRESHOLD
+                  valueFrom:
+                    configMapKeyRef:
+                      name: failover-controller-config
+                      key: REPLICATION_LAG_THRESHOLD
+                - name: METRICS_FILE
+                  value: "/metrics/health_check.prom"
+              volumeMounts:
+                - name: scripts
+                  mountPath: /scripts
+                - name: metrics
+                  mountPath: /metrics
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
+                limits:
+                  cpu: 200m
+                  memory: 256Mi
+          volumes:
+            - name: scripts
+              configMap:
+                name: dr-scripts
+                defaultMode: 0755
+            - name: metrics
+              persistentVolumeClaim:
+                claimName: dr-metrics-pvc
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dr-test-quarterly
+  namespace: default
+  labels:
+    app: dr-test
+    component: disaster-recovery
+spec:
+  # Run on 1st of every quarter at 3 AM UTC (Jan 1, Apr 1, Jul 1, Oct 1)
+  schedule: "0 3 1 1,4,7,10 *"
+  successfulJobsHistoryLimit: 4
+  failedJobsHistoryLimit: 4
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: dr-test
+            component: disaster-recovery
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: dr-test
+              image: postgres:14-alpine
+              command:
+                - /bin/sh
+                - /scripts/test-failover.sh
+              env:
+                - name: PRIMARY_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: failover-controller-config
+                      key: PRIMARY_HOST
+                - name: PRIMARY_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: failover-controller-config
+                      key: PRIMARY_PORT
+                - name: REPLICA_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: failover-controller-config
+                      key: REPLICA_HOST
+                - name: REPLICA_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: failover-controller-config
+                      key: REPLICA_PORT
+                - name: POSTGRES_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-credentials
+                      key: POSTGRES_USER
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-credentials
+                      key: POSTGRES_PASSWORD
+                - name: REPLICATION_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-credentials
+                      key: REPLICATION_USER
+                - name: REPLICATION_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-credentials
+                      key: REPLICATION_PASSWORD
+              volumeMounts:
+                - name: scripts
+                  mountPath: /scripts
+                - name: test-reports
+                  mountPath: /var/log/postgresql
+                - name: metrics
+                  mountPath: /var/lib/postgresql/metrics
+              resources:
+                requests:
+                  cpu: 200m
+                  memory: 256Mi
+                limits:
+                  cpu: 500m
+                  memory: 512Mi
+          volumes:
+            - name: scripts
+              configMap:
+                name: dr-scripts
+                defaultMode: 0755
+            - name: test-reports
+              persistentVolumeClaim:
+                claimName: dr-test-reports-pvc
+            - name: metrics
+              persistentVolumeClaim:
+                claimName: dr-metrics-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dr-metrics-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: standard
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dr-test-reports-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: standard

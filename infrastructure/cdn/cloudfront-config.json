@@ -1,0 +1,298 @@
+{
+  "Comment": "KrishiAI Platform CDN Configuration - Static Assets and API Caching",
+  "CallerReference": "krishiai-cdn-2026-01",
+  "Aliases": {
+    "Quantity": 2,
+    "Items": [
+      "cdn.krishiai.com",
+      "assets.krishiai.com"
+    ]
+  },
+  "DefaultRootObject": "index.html",
+  "Origins": {
+    "Quantity": 3,
+    "Items": [
+      {
+        "Id": "krishiai-s3-static-assets",
+        "DomainName": "krishiai-static-assets.s3.ap-south-1.amazonaws.com",
+        "OriginPath": "",
+        "CustomHeaders": {
+          "Quantity": 0
+        },
+        "S3OriginConfig": {
+          "OriginAccessIdentity": "origin-access-identity/cloudfront/ABCDEFG1234567"
+        },
+        "ConnectionAttempts": 3,
+        "ConnectionTimeout": 10,
+        "OriginShield": {
+          "Enabled": true,
+          "OriginShieldRegion": "ap-south-1"
+        }
+      },
+      {
+        "Id": "krishiai-api-gateway",
+        "DomainName": "api.krishiai.com",
+        "OriginPath": "",
+        "CustomHeaders": {
+          "Quantity": 1,
+          "Items": [
+            {
+              "HeaderName": "X-CDN-Secret",
+              "HeaderValue": "REPLACE_WITH_SECRET"
+            }
+          ]
+        },
+        "CustomOriginConfig": {
+          "HTTPPort": 80,
+          "HTTPSPort": 443,
+          "OriginProtocolPolicy": "https-only",
+          "OriginSslProtocols": {
+            "Quantity": 1,
+            "Items": ["TLSv1.2"]
+          },
+          "OriginReadTimeout": 30,
+          "OriginKeepaliveTimeout": 5
+        },
+        "ConnectionAttempts": 3,
+        "ConnectionTimeout": 10
+      },
+      {
+        "Id": "krishiai-ml-models",
+        "DomainName": "krishiai-ml-models.s3.ap-south-1.amazonaws.com",
+        "OriginPath": "",
+        "S3OriginConfig": {
+          "OriginAccessIdentity": "origin-access-identity/cloudfront/ABCDEFG1234567"
+        },
+        "ConnectionAttempts": 3,
+        "ConnectionTimeout": 10,
+        "OriginShield": {
+          "Enabled": true,
+          "OriginShieldRegion": "ap-south-1"
+        }
+      }
+    ]
+  },
+  "OriginGroups": {
+    "Quantity": 0
+  },
+  "DefaultCacheBehavior": {
+    "TargetOriginId": "krishiai-s3-static-assets",
+    "ViewerProtocolPolicy": "redirect-to-https",
+    "AllowedMethods": {
+      "Quantity": 2,
+      "Items": ["GET", "HEAD"],
+      "CachedMethods": {
+        "Quantity": 2,
+        "Items": ["GET", "HEAD"]
+      }
+    },
+    "Compress": true,
+    "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+    "OriginRequestPolicyId": "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf",
+    "ResponseHeadersPolicyId": "5cc3b908-e619-4b99-88e5-2cf7f45965bd",
+    "MinTTL": 0,
+    "DefaultTTL": 86400,
+    "MaxTTL": 31536000,
+    "ForwardedValues": {
+      "QueryString": false,
+      "Cookies": {
+        "Forward": "none"
+      },
+      "Headers": {
+        "Quantity": 0
+      }
+    }
+  },
+  "CacheBehaviors": {
+    "Quantity": 5,
+    "Items": [
+      {
+        "PathPattern": "/api/v1/market/prices*",
+        "TargetOriginId": "krishiai-api-gateway",
+        "ViewerProtocolPolicy": "https-only",
+        "AllowedMethods": {
+          "Quantity": 2,
+          "Items": ["GET", "HEAD"],
+          "CachedMethods": {
+            "Quantity": 2,
+            "Items": ["GET", "HEAD"]
+          }
+        },
+        "Compress": true,
+        "MinTTL": 0,
+        "DefaultTTL": 3600,
+        "MaxTTL": 3600,
+        "ForwardedValues": {
+          "QueryString": true,
+          "Cookies": {
+            "Forward": "none"
+          },
+          "Headers": {
+            "Quantity": 2,
+            "Items": ["Authorization", "Accept-Language"]
+          }
+        },
+        "TrustedSigners": {
+          "Enabled": false,
+          "Quantity": 0
+        }
+      },
+      {
+        "PathPattern": "/api/v1/climate/weather*",
+        "TargetOriginId": "krishiai-api-gateway",
+        "ViewerProtocolPolicy": "https-only",
+        "AllowedMethods": {
+          "Quantity": 2,
+          "Items": ["GET", "HEAD"],
+          "CachedMethods": {
+            "Quantity": 2,
+            "Items": ["GET", "HEAD"]
+          }
+        },
+        "Compress": true,
+        "MinTTL": 0,
+        "DefaultTTL": 21600,
+        "MaxTTL": 21600,
+        "ForwardedValues": {
+          "QueryString": true,
+          "Cookies": {
+            "Forward": "none"
+          },
+          "Headers": {
+            "Quantity": 2,
+            "Items": ["Authorization", "Accept-Language"]
+          }
+        }
+      },
+      {
+        "PathPattern": "/api/v1/schemes*",
+        "TargetOriginId": "krishiai-api-gateway",
+        "ViewerProtocolPolicy": "https-only",
+        "AllowedMethods": {
+          "Quantity": 2,
+          "Items": ["GET", "HEAD"],
+          "CachedMethods": {
+            "Quantity": 2,
+            "Items": ["GET", "HEAD"]
+          }
+        },
+        "Compress": true,
+        "MinTTL": 0,
+        "DefaultTTL": 86400,
+        "MaxTTL": 86400,
+        "ForwardedValues": {
+          "QueryString": true,
+          "Cookies": {
+            "Forward": "none"
+          },
+          "Headers": {
+            "Quantity": 2,
+            "Items": ["Authorization", "Accept-Language"]
+          }
+        }
+      },
+      {
+        "PathPattern": "/models/*",
+        "TargetOriginId": "krishiai-ml-models",
+        "ViewerProtocolPolicy": "https-only",
+        "AllowedMethods": {
+          "Quantity": 2,
+          "Items": ["GET", "HEAD"],
+          "CachedMethods": {
+            "Quantity": 2,
+            "Items": ["GET", "HEAD"]
+          }
+        },
+        "Compress": true,
+        "MinTTL": 0,
+        "DefaultTTL": 604800,
+        "MaxTTL": 31536000,
+        "ForwardedValues": {
+          "QueryString": false,
+          "Cookies": {
+            "Forward": "none"
+          },
+          "Headers": {
+            "Quantity": 1,
+            "Items": ["Authorization"]
+          }
+        }
+      },
+      {
+        "PathPattern": "/static/*",
+        "TargetOriginId": "krishiai-s3-static-assets",
+        "ViewerProtocolPolicy": "redirect-to-https",
+        "AllowedMethods": {
+          "Quantity": 2,
+          "Items": ["GET", "HEAD"],
+          "CachedMethods": {
+            "Quantity": 2,
+            "Items": ["GET", "HEAD"]
+          }
+        },
+        "Compress": true,
+        "MinTTL": 0,
+        "DefaultTTL": 86400,
+        "MaxTTL": 31536000,
+        "ForwardedValues": {
+          "QueryString": false,
+          "Cookies": {
+            "Forward": "none"
+          },
+          "Headers": {
+            "Quantity": 0
+          }
+        }
+      }
+    ]
+  },
+  "CustomErrorResponses": {
+    "Quantity": 3,
+    "Items": [
+      {
+        "ErrorCode": 403,
+        "ResponsePagePath": "/error/403.html",
+        "ResponseCode": "403",
+        "ErrorCachingMinTTL": 300
+      },
+      {
+        "ErrorCode": 404,
+        "ResponsePagePath": "/error/404.html",
+        "ResponseCode": "404",
+        "ErrorCachingMinTTL": 300
+      },
+      {
+        "ErrorCode": 500,
+        "ResponsePagePath": "/error/500.html",
+        "ResponseCode": "500",
+        "ErrorCachingMinTTL": 60
+      }
+    ]
+  },
+  "Comment": "KrishiAI CDN Distribution",
+  "Logging": {
+    "Enabled": true,
+    "IncludeCookies": false,
+    "Bucket": "krishiai-cdn-logs.s3.amazonaws.com",
+    "Prefix": "cloudfront/"
+  },
+  "PriceClass": "PriceClass_All",
+  "Enabled": true,
+  "ViewerCertificate": {
+    "ACMCertificateArn": "arn:aws:acm:us-east-1:ACCOUNT_ID:certificate/CERTIFICATE_ID",
+    "SSLSupportMethod": "sni-only",
+    "MinimumProtocolVersion": "TLSv1.2_2021",
+    "Certificate": "arn:aws:acm:us-east-1:ACCOUNT_ID:certificate/CERTIFICATE_ID",
+    "CertificateSource": "acm"
+  },
+  "Restrictions": {
+    "GeoRestriction": {
+      "RestrictionType": "whitelist",
+      "Quantity": 1,
+      "Items": ["IN"]
+    }
+  },
+  "WebACLId": "arn:aws:wafv2:us-east-1:ACCOUNT_ID:global/webacl/krishiai-waf/WEBACL_ID",
+  "HttpVersion": "http2and3",
+  "IsIPV6Enabled": true
+}

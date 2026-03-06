@@ -1,0 +1,224 @@
+{
+  "punjab": {
+    "wheat_diseases": [
+      {
+        "name": "Yellow Rust (Stripe Rust)",
+        "local_name_pa": "ਪੀਲੀ ਜੰਗਾਲ",
+        "scientific_name": "Puccinia striiformis",
+        "severity": "high",
+        "symptoms": "Yellow-orange pustules in stripes on leaves",
+        "favorable_conditions": "Cool, moist weather (10-15°C)",
+        "organic_treatment": "Neem oil spray, resistant varieties",
+        "chemical_treatment": "Propiconazole, Tebuconazole"
+      },
+      {
+        "name": "Leaf Blight",
+        "local_name_pa": "ਪੱਤਾ ਝੁਲਸਾ",
+        "scientific_name": "Alternaria triticina",
+        "severity": "medium",
+        "symptoms": "Brown spots on leaves, yellowing",
+        "favorable_conditions": "High humidity, warm weather",
+        "organic_treatment": "Copper-based fungicides, crop rotation",
+        "chemical_treatment": "Mancozeb, Chlorothalonil"
+      }
+    ],
+    "paddy_diseases": [
+      {
+        "name": "Bacterial Leaf Blight",
+        "local_name_pa": "ਬੈਕਟੀਰੀਅਲ ਪੱਤਾ ਝੁਲਸਾ",
+        "scientific_name": "Xanthomonas oryzae",
+        "severity": "high",
+        "symptoms": "Water-soaked lesions, yellowing leaves",
+        "favorable_conditions": "High humidity, warm temperature",
+        "organic_treatment": "Pseudomonas fluorescens, resistant varieties",
+        "chemical_treatment": "Copper oxychloride, Streptocycline"
+      },
+      {
+        "name": "Blast Disease",
+        "local_name_pa": "ਬਲਾਸਟ ਰੋਗ",
+        "scientific_name": "Pyricularia oryzae",
+        "severity": "very_high",
+        "symptoms": "Diamond-shaped lesions on leaves",
+        "favorable_conditions": "High humidity, nitrogen excess",
+        "organic_treatment": "Trichoderma, silicon application",
+        "chemical_treatment": "Tricyclazole, Isoprothiolane"
+      }
+    ],
+    "cotton_diseases": [
+      {
+        "name": "Cotton Leaf Curl Virus",
+        "local_name_pa": "ਕਪਾਹ ਪੱਤਾ ਮੋੜ ਵਾਇਰਸ",
+        "scientific_name": "Begomovirus",
+        "severity": "very_high",
+        "symptoms": "Leaf curling, vein thickening, stunted growth",
+        "favorable_conditions": "Whitefly infestation",
+        "organic_treatment": "Neem oil, yellow sticky traps for whitefly",
+        "chemical_treatment": "Imidacloprid for whitefly control"
+      }
+    ]
+  },
+  "karnataka": {
+    "coffee_diseases": [
+      {
+        "name": "Coffee Leaf Rust",
+        "local_name_kn": "ಕಾಫಿ ಎಲೆ ತುಕ್ಕು",
+        "scientific_name": "Hemileia vastatrix",
+        "severity": "very_high",
+        "symptoms": "Orange-yellow powdery spots on leaf undersides",
+        "favorable_conditions": "High humidity, moderate temperature",
+        "organic_treatment": "Bordeaux mixture, resistant varieties",
+        "chemical_treatment": "Copper-based fungicides, Triadimefon"
+      },
+      {
+        "name": "Coffee Berry Disease",
+        "local_name_kn": "ಕಾಫಿ ಬೆರ್ರಿ ರೋಗ",
+        "scientific_name": "Colletotrichum kahawae",
+        "severity": "high",
+        "symptoms": "Dark sunken lesions on berries",
+        "favorable_conditions": "Cool, wet weather during flowering",
+        "organic_treatment": "Copper fungicides, proper pruning",
+        "chemical_treatment": "Copper oxychloride"
+      }
+    ],
+    "ragi_diseases": [
+      {
+        "name": "Finger Millet Blast",
+        "local_name_kn": "ರಾಗಿ ಬ್ಲಾಸ್ಟ್",
+        "scientific_name": "Pyricularia grisea",
+        "severity": "high",
+        "symptoms": "Spindle-shaped lesions on leaves and neck",
+        "favorable_conditions": "High humidity, cool nights",
+        "organic_treatment": "Trichoderma, resistant varieties",
+        "chemical_treatment": "Tricyclazole, Carbendazim"
+      }
+    ],
+    "arecanut_diseases": [
+      {
+        "name": "Yellow Leaf Disease",
+        "local_name_kn": "ಹಳದಿ ಎಲೆ ರೋಗ",
+        "scientific_name": "Phytoplasma",
+        "severity": "very_high",
+        "symptoms": "Yellowing of leaves, nut dropping",
+        "favorable_conditions": "Vector-borne (leafhopper)",
+        "organic_treatment": "Remove infected palms, control vectors",
+        "chemical_treatment": "Tetracycline injection, insecticides for vectors"
+      },
+      {
+        "name": "Fruit Rot",
+        "local_name_kn": "ಹಣ್ಣು ಕೊಳೆತ",
+        "scientific_name": "Phytophthora meadii",
+        "severity": "high",
+        "symptoms": "Water-soaked lesions on fruits",
+        "favorable_conditions": "High rainfall, poor drainage",
+        "organic_treatment": "Bordeaux mixture, improve drainage",
+        "chemical_treatment": "Metalaxyl, Copper oxychloride"
+      }
+    ]
+  },
+  "telangana": {
+    "cotton_diseases": [
+      {
+        "name": "Cotton Wilt",
+        "local_name_te": "పత్తి వాడిపోవుట",
+        "scientific_name": "Fusarium oxysporum",
+        "severity": "very_high",
+        "symptoms": "Wilting, yellowing, vascular browning",
+        "favorable_conditions": "Warm soil, continuous cotton cultivation",
+        "organic_treatment": "Trichoderma, crop rotation, resistant varieties",
+        "chemical_treatment": "Carbendazim seed treatment"
+      },
+      {
+        "name": "Grey Mildew",
+        "local_name_te": "బూజు వ్యాధి",
+        "scientific_name": "Ramularia areola",
+        "severity": "medium",
+        "symptoms": "White angular spots on leaves",
+        "favorable_conditions": "High humidity, moderate temperature",
+        "organic_treatment": "Sulfur dust, neem oil",
+        "chemical_treatment": "Sulfur-based fungicides"
+      }
+    ],
+    "turmeric_diseases": [
+      {
+        "name": "Rhizome Rot",
+        "local_name_te": "వేరు కుళ్ళు",
+        "scientific_name": "Pythium aphanidermatum",
+        "severity": "high",
+        "symptoms": "Water-soaked lesions, rotting of rhizomes",
+        "favorable_conditions": "Waterlogging, poor drainage",
+        "organic_treatment": "Trichoderma, improve drainage",
+        "chemical_treatment": "Metalaxyl, Mancozeb"
+      },
+      {
+        "name": "Leaf Spot",
+        "local_name_te": "ఆకు మచ్చలు",
+        "scientific_name": "Colletotrichum capsici",
+        "severity": "medium",
+        "symptoms": "Brown spots with yellow halo on leaves",
+        "favorable_conditions": "High humidity, warm weather",
+        "organic_treatment": "Neem oil, copper fungicides",
+        "chemical_treatment": "Mancozeb, Carbendazim"
+      }
+    ],
+    "chilli_diseases": [
+      {
+        "name": "Chilli Leaf Curl",
+        "local_name_te": "మిర్చి ఆకు ముడత",
+        "scientific_name": "Begomovirus",
+        "severity": "very_high",
+        "symptoms": "Leaf curling, stunted growth, reduced yield",
+        "favorable_conditions": "Whitefly infestation",
+        "organic_treatment": "Yellow sticky traps, neem oil",
+        "chemical_treatment": "Imidacloprid for whitefly control"
+      },
+      {
+        "name": "Anthracnose",
+        "local_name_te": "పండ్ల కుళ్ళు",
+        "scientific_name": "Colletotrichum capsici",
+        "severity": "high",
+        "symptoms": "Circular sunken lesions on fruits",
+        "favorable_conditions": "High humidity, warm temperature",
+        "organic_treatment": "Copper fungicides, proper spacing",
+        "chemical_treatment": "Mancozeb, Carbendazim"
+      }
+    ],
+    "paddy_diseases": [
+      {
+        "name": "Brown Spot",
+        "local_name_te": "గోధుమ మచ్చ",
+        "scientific_name": "Bipolaris oryzae",
+        "severity": "medium",
+        "symptoms": "Brown oval spots on leaves and grains",
+        "favorable_conditions": "Nutrient deficiency, drought stress",
+        "organic_treatment": "Balanced fertilization, seed treatment",
+        "chemical_treatment": "Mancozeb, Edifenphos"
+      }
+    ]
+  },
+  "common_pests": {
+    "all_regions": [
+      {
+        "name": "Aphids",
+        "local_names": {
+          "pa": "ਮਾਹੂ",
+          "kn": "ಗಿಡಹೇನು",
+          "te": "పేనులు"
+        },
+        "affected_crops": ["wheat", "cotton", "vegetables"],
+        "organic_control": "Neem oil, ladybird beetles",
+        "chemical_control": "Imidacloprid, Dimethoate"
+      },
+      {
+        "name": "Whitefly",
+        "local_names": {
+          "pa": "ਚਿੱਟੀ ਮੱਖੀ",
+          "kn": "ಬಿಳಿ ನೊಣ",
+          "te": "తెల్ల ఈగ"
+        },
+        "affected_crops": ["cotton", "chilli", "tomato"],
+        "organic_control": "Yellow sticky traps, neem oil",
+        "chemical_control": "Imidacloprid, Thiamethoxam"
+      }
+    ]
+  }
+}

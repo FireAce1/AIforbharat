@@ -1,0 +1,128 @@
+# Alertmanager Configuration for KrishiAI Platform
+# Routes alerts to appropriate notification channels
+
+global:
+  resolve_timeout: 5m
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'alerts@krishiai.com'
+  smtp_auth_username: 'alerts@krishiai.com'
+  smtp_auth_password: '${SMTP_PASSWORD}'
+
+# Route tree for alert routing
+route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 12h
+  receiver: 'default'
+  
+  routes:
+    # Critical alerts - immediate notification
+    - match:
+        severity: critical
+      receiver: 'critical-alerts'
+      continue: true
+    
+    # Performance warnings
+    - match:
+        category: performance
+      receiver: 'performance-team'
+      continue: true
+    
+    # ML model alerts
+    - match:
+        category: ml_performance
+      receiver: 'ml-team'
+      continue: true
+    
+    # Infrastructure alerts
+    - match:
+        category: infrastructure
+      receiver: 'devops-team'
+      continue: true
+    
+    # Business metrics
+    - match:
+        category: business
+      receiver: 'product-team'
+
+# Notification receivers
+receivers:
+  - name: 'default'
+    email_configs:
+      - to: 'team@krishiai.com'
+        headers:
+          Subject: '[KrishiAI] Alert: {{ .GroupLabels.alertname }}'
+  
+  - name: 'critical-alerts'
+    email_configs:
+      - to: 'oncall@krishiai.com'
+        headers:
+          Subject: '[CRITICAL] KrishiAI Alert: {{ .GroupLabels.alertname }}'
+    # Slack webhook for critical alerts
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#krishiai-critical-alerts'
+        title: 'Critical Alert: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: true
+  
+  - name: 'performance-team'
+    email_configs:
+      - to: 'performance@krishiai.com'
+        headers:
+          Subject: '[Performance] KrishiAI Alert: {{ .GroupLabels.alertname }}'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#krishiai-performance'
+        title: 'Performance Alert: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+  
+  - name: 'ml-team'
+    email_configs:
+      - to: 'ml-team@krishiai.com'
+        headers:
+          Subject: '[ML] KrishiAI Alert: {{ .GroupLabels.alertname }}'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#krishiai-ml-alerts'
+        title: 'ML Alert: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+  
+  - name: 'devops-team'
+    email_configs:
+      - to: 'devops@krishiai.com'
+        headers:
+          Subject: '[Infrastructure] KrishiAI Alert: {{ .GroupLabels.alertname }}'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#krishiai-infrastructure'
+        title: 'Infrastructure Alert: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+  
+  - name: 'product-team'
+    email_configs:
+      - to: 'product@krishiai.com'
+        headers:
+          Subject: '[Business Metrics] KrishiAI Alert: {{ .GroupLabels.alertname }}'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#krishiai-business-metrics'
+        title: 'Business Metrics Alert: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+
+# Inhibition rules - suppress certain alerts when others are firing
+inhibit_rules:
+  # Suppress all alerts if service is down
+  - source_match:
+      alertname: 'ServiceDown'
+    target_match_re:
+      alertname: '.*'
+    equal: ['service']
+  
+  # Suppress low-level alerts if high-level alert is firing
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'service']

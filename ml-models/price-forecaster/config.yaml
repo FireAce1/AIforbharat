@@ -1,0 +1,83 @@
+# Price Forecaster Configuration
+
+# Database Configuration
+database:
+  host: localhost
+  port: 5432
+  database: krishiai_db
+  user: krishiai_user
+  password: ${DB_PASSWORD}  # Set via environment variable
+
+# Data Configuration
+data:
+  historical_years: 5
+  train_test_split: 0.8
+  validation_split: 0.2
+  min_records: 1825  # 5 years of daily data
+
+# ARIMA Configuration
+arima:
+  order: [5, 1, 2]  # (p, d, q)
+  seasonal_order: [0, 0, 0, 0]  # No seasonality for now
+  forecast_days: 7
+
+# LSTM Configuration
+lstm:
+  sequence_length: 30  # 30-day input sequences
+  forecast_days: 7
+  layers:
+    - units: 64
+      dropout: 0.2
+      return_sequences: true
+    - units: 32
+      dropout: 0.2
+  dense_units: 7  # Output 7-day forecast
+  epochs: 100
+  batch_size: 32
+  learning_rate: 0.001
+  early_stopping:
+    patience: 10
+    min_delta: 0.001
+
+# Ensemble Configuration
+ensemble:
+  arima_weight: 0.6
+  lstm_weight: 0.4
+
+# Training Configuration
+training:
+  crops:
+    - tomato
+    - onion
+    - potato
+    - wheat
+    - rice
+    - cotton
+  markets:
+    - pune
+    - mumbai
+    - nashik
+    - nagpur
+    - delhi
+  random_seed: 42
+
+# Evaluation Configuration
+evaluation:
+  metrics:
+    - mape  # Mean Absolute Percentage Error
+    - rmse  # Root Mean Squared Error
+    - mae   # Mean Absolute Error
+  target_mape: 15.0  # Target: MAPE < 15% (>85% accuracy)
+
+# Model Storage
+models:
+  save_dir: models/
+  arima_prefix: arima_
+  lstm_prefix: lstm_
+  scaler_prefix: scaler_
+
+# Logging
+logging:
+  level: INFO
+  format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  file: logs/training.log

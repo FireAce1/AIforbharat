@@ -1,0 +1,50 @@
+# API Performance Alerts
+# Triggers when API performance degrades
+
+groups:
+  - name: api_performance
+    interval: 30s
+    rules:
+      # Alert when p95 latency exceeds 500ms
+      - alert: HighAPILatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+          category: performance
+        annotations:
+          summary: "High API latency detected on {{ $labels.service }}"
+          description: "P95 latency is {{ $value }}s (threshold: 0.5s) for service {{ $labels.service }} endpoint {{ $labels.endpoint }}"
+
+      # Alert when error rate exceeds 1%
+      - alert: HighErrorRate
+        expr: (rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m])) > 0.01
+        for: 5m
+        labels:
+          severity: critical
+          category: reliability
+        annotations:
+          summary: "High error rate detected on {{ $labels.service }}"
+          description: "Error rate is {{ $value | humanizePercentage }} (threshold: 1%) for service {{ $labels.service }}"
+
+      # Alert when service is down
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+          category: availability
+        annotations:
+          summary: "Service {{ $labels.job }} is down"
+          description: "Service {{ $labels.job }} at {{ $labels.instance }} has been down for more than 1 minute"
+
+      # Alert when request rate drops significantly
+      - alert: LowRequestRate
+        expr: rate(http_requests_total[5m]) < 0.1
+        for: 10m
+        labels:
+          severity: warning
+          category: traffic
+        annotations:
+          summary: "Low request rate on {{ $labels.service }}"
+          description: "Request rate is {{ $value }} req/s (expected > 0.1 req/s) for service {{ $labels.service }}"

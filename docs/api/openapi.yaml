@@ -1,0 +1,296 @@
+openapi: 3.0.3
+info:
+  title: KrishiAI Platform API
+  description: |
+    Comprehensive API documentation for the KrishiAI platform - an AI-powered rural development platform 
+    that democratizes agricultural intelligence for Indian farmers.
+    
+    ## Features
+    - Phone-based OTP authentication
+    - AI-powered crop recommendations
+    - Disease detection using computer vision
+    - Market price forecasting
+    - Weather and water advisory
+    - Government scheme discovery
+    - Multilingual chatbot (Hindi/Marathi)
+    
+    ## Base URLs
+    - Development: `http://localhost:3000/api/v1`
+    - Production: `https://api.krishiai.com/api/v1`
+    
+    ## Authentication
+    Most endpoints require JWT authentication. Include the token in the Authorization header:
+    ```
+    Authorization: Bearer <your-jwt-token>
+    ```
+    
+    ## Rate Limiting
+    - OTP endpoints: 5 requests/hour per phone
+    - Standard endpoints: 1,000 requests/hour per user
+    - ML inference: 50-200 requests/hour per user
+    
+  version: 1.0.0
+  contact:
+    name: KrishiAI API Support
+    email: api-support@krishiai.com
+    url: https://docs.krishiai.com
+  license:
+    name: Proprietary
+    url: https://krishiai.com/license
+
+servers:
+  - url: https://api.krishiai.com/api/v1
+    description: Production server
+  - url: http://localhost:3000/api/v1
+    description: Development server
+
+tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Crop Intelligence
+    description: Crop recommendations, disease detection, yield prediction
+  - name: Market Intelligence
+    description: Market prices, forecasting, profit calculation
+  - name: Climate Intelligence
+    description: Weather forecasts, water advisory, climate risk
+  - name: Government Services
+    description: Government schemes, eligibility filtering, notifications
+  - name: Chatbot
+    description: Voice and text-based conversational interface
+
+security:
+  - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from /auth/verify-otp endpoint
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              example: VALIDATION_ERROR
+            message:
+              type: string
+              example: Invalid phone number format
+            details:
+              type: object
+              additionalProperties: true
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 12345678-90ab-cdef-1234-567890abcdef
+        phone:
+          type: string
+          pattern: '^\+91[6-9]\d{9}$'
+          example: "+919876543210"
+        name:
+          type: string
+          nullable: true
+          example: राज कुमार
+        language:
+          type: string
+          enum: [hi, mr]
+          example: hi
+        createdAt:
+          type: string
+          format: date-time
+        lastActive:
+          type: string
+          format: date-time
+
+paths:
+  /auth/send-otp:
+    post:
+      tags:
+        - Authentication
+      summary: Send OTP to phone number
+      description: |
+        Request an OTP to be sent to the user's phone number via SMS.
+        Rate limited to 5 requests per hour per phone number.
+      operationId: sendOtp
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - phone
+              properties:
+                phone:
+                  type: string
+                  pattern: '^\+91[6-9]\d{9}$'
+                  description: Indian phone number with +91 country code
+                  example: "+919876543210"
+      responses:
+        '200':
+          description: OTP sent successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: Maximum requests allowed
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+              description: Requests remaining
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Unix timestamp when limit resets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: OTP sent successfully
+                  expiresIn:
+                    type: integer
+                    description: OTP expiry time in seconds
+                    example: 300
+        '400':
+          description: Invalid phone number format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Seconds to wait before retrying
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/verify-otp:
+    post:
+      tags:
+        - Authentication
+      summary: Verify OTP and get JWT token
+      description: Verify the OTP code and receive a JWT token for authenticated requests
+      operationId: verifyOtp
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - phone
+                - code
+              properties:
+                phone:
+                  type: string
+                  pattern: '^\+91[6-9]\d{9}$'
+                  example: "+919876543210"
+                code:
+                  type: string
+                  pattern: '^\d{6}$'
+                  description: 6-digit OTP code
+                  example: "123456"
+      responses:
+        '200':
+          description: OTP verified successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT token for authenticated requests
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  user:
+                    $ref: '#/components/schemas/User'
+                  expiresIn:
+                    type: integer
+                    description: Token expiry time in seconds (7 days)
+                    example: 604800
+        '400':
+          description: Invalid or expired OTP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: OTP not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh JWT token
+      description: Refresh an existing JWT token to extend the session
+      operationId: refreshToken
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  expiresIn:
+                    type: integer
+                    example: 604800
+        '401':
+          description: Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/profile:
+    get:
+      tags:
+        - Authentication
+      summary: Get user profile
+      description: Get the authenticated user's profile information
+      operationId: getUserProfile
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'

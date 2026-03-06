@@ -1,0 +1,421 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      skip_tests:
+        description: 'Skip CI tests (not recommended)'
+        required: false
+        default: 'false'
+
+env:
+  NODE_VERSION: '18.x'
+  PYTHON_VERSION: '3.10'
+  REGISTRY: ghcr.io
+  IMAGE_TAG: prod-${{ github.sha }}
+
+jobs:
+  # Run CI tests first (unless skipped)
+  ci-tests:
+    name: Run CI Tests
+    if: github.event.inputs.skip_tests != 'true'
+    uses: ./.github/workflows/ci.yml
+
+  # Build and push Docker images
+  build-and-push:
+    name: Build and Push Images
+    runs-on: ubuntu-latest
+    needs: [ci-tests]
+    if: always() && (needs.ci-tests.result == 'success' || needs.ci-tests.result == 'skipped')
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        service: [auth-service, crop-service, market-service, climate-service, govt-service]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.service }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix=prod-
+            type=raw,value=latest
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: services/${{ matrix.service }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Deploy to production with gradual rollout
+  deploy-production-10-percent:
+    name: Deploy 10% Traffic
+    runs-on: ubuntu-latest
+    needs: [build-and-push]
+    environment:
+      name: production-10-percent
+      url: https://krishiai.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG_PRODUCTION }}
+
+      - name: Update image tags in manifests
+        run: |
+          for service in auth-service crop-service market-service climate-service govt-service; do
+            sed -i "s|image: .*/${service}:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/${service}:${{ env.IMAGE_TAG }}|g" infrastructure/k8s/${service}-deployment.yaml
+          done
+
+      - name: Deploy ConfigMap
+        run: kubectl apply -f infrastructure/k8s/configmap.yaml -n production
+
+      - name: Deploy Secrets
+        run: |
+          kubectl create secret generic krishiai-secrets \
+            --from-literal=database-url="${{ secrets.PRODUCTION_DATABASE_URL }}" \
+            --from-literal=redis-url="${{ secrets.PRODUCTION_REDIS_URL }}" \
+            --from-literal=jwt-secret="${{ secrets.PRODUCTION_JWT_SECRET }}" \
+            --from-literal=sms-api-key="${{ secrets.PRODUCTION_SMS_API_KEY }}" \
+            --from-literal=imd-api-key="${{ secrets.PRODUCTION_IMD_API_KEY }}" \
+            --from-literal=sentry-dsn="${{ secrets.PRODUCTION_SENTRY_DSN }}" \
+            --dry-run=client -o yaml | kubectl apply -f - -n production
+
+      - name: Deploy services with 10% traffic
+        run: |
+          # Deploy new version with maxSurge=1, maxUnavailable=0 for gradual rollout
+          for service in auth-service crop-service market-service climate-service govt-service; do
+            kubectl set image deployment/${service} ${service}=${{ env.REGISTRY }}/${{ github.repository }}/${service}:${{ env.IMAGE_TAG }} -n production
+            kubectl patch deployment ${service} -n production -p '{"spec":{"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0}}}}'
+          done
+
+      - name: Wait for initial rollout (10%)
+        run: |
+          # Wait for at least 1 new pod to be ready
+          for service in auth-service crop-service market-service climate-service govt-service; do
+            kubectl rollout status deployment/${service} -n production --timeout=5m
+          done
+
+      - name: Monitor error rates
+        run: |
+          echo "Monitoring error rates for 5 minutes..."
+          sleep 300
+
+      - name: Check deployment health
+        run: |
+          services=("auth-service" "crop-service" "market-service" "climate-service" "govt-service")
+          for service in "${services[@]}"; do
+            ready_pods=$(kubectl get deployment ${service} -n production -o jsonpath='{.status.readyReplicas}')
+            desired_pods=$(kubectl get deployment ${service} -n production -o jsonpath='{.spec.replicas}')
+            echo "$service: $ready_pods/$desired_pods pods ready"
+            if [ "$ready_pods" -lt 1 ]; then
+              echo "❌ $service has no ready pods"
+              exit 1
+            fi
+          done
+
+  # Deploy to 50% traffic
+  deploy-production-50-percent:
+    name: Deploy 50% Traffic
+    runs-on: ubuntu-latest
+    needs: [deploy-production-10-percent]
+    environment:
+      name: production-50-percent
+      url: https://krishiai.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG_PRODUCTION }}
+
+      - name: Scale to 50% traffic
+        run: |
+          # Continue rolling update to 50% of pods
+          for service in auth-service crop-service market-service climate-service govt-service; do
+            total_replicas=$(kubectl get deployment ${service} -n production -o jsonpath='{.spec.replicas}')
+            half_replicas=$((total_replicas / 2))
+            
+            # Gradually scale up new version
+            current_ready=0
+            while [ $current_ready -lt $half_replicas ]; do
+              kubectl rollout status deployment/${service} -n production --timeout=2m || true
+              current_ready=$(kubectl get deployment ${service} -n production -o jsonpath='{.status.updatedReplicas}')
+              echo "$service: $current_ready/$half_replicas pods updated"
+              sleep 10
+            done
+          done
+
+      - name: Monitor error rates
+        run: |
+          echo "Monitoring error rates for 5 minutes..."
+          sleep 300
+
+      - name: Check deployment health
+        run: |
+          services=("auth-service" "crop-service" "market-service" "climate-service" "govt-service")
+          for service in "${services[@]}"; do
+            ready_pods=$(kubectl get deployment ${service} -n production -o jsonpath='{.status.readyReplicas}')
+            desired_pods=$(kubectl get deployment ${service} -n production -o jsonpath='{.spec.replicas}')
+            echo "$service: $ready_pods/$desired_pods pods ready"
+            
+            # Check if at least 50% of pods are ready
+            half_desired=$((desired_pods / 2))
+            if [ "$ready_pods" -lt "$half_desired" ]; then
+              echo "❌ $service has less than 50% ready pods"
+              exit 1
+            fi
+          done
+
+  # Deploy to 100% traffic
+  deploy-production-100-percent:
+    name: Deploy 100% Traffic
+    runs-on: ubuntu-latest
+    needs: [deploy-production-50-percent]
+    environment:
+      name: production
+      url: https://krishiai.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG_PRODUCTION }}
+
+      - name: Complete rollout to 100%
+        run: |
+          for service in auth-service crop-service market-service climate-service govt-service; do
+            kubectl rollout status deployment/${service} -n production --timeout=10m
+          done
+
+      - name: Verify all pods are ready
+        run: |
+          services=("auth-service" "crop-service" "market-service" "climate-service" "govt-service")
+          for service in "${services[@]}"; do
+            ready_pods=$(kubectl get deployment ${service} -n production -o jsonpath='{.status.readyReplicas}')
+            desired_pods=$(kubectl get deployment ${service} -n production -o jsonpath='{.spec.replicas}')
+            echo "$service: $ready_pods/$desired_pods pods ready"
+            
+            if [ "$ready_pods" != "$desired_pods" ]; then
+              echo "❌ $service does not have all pods ready"
+              exit 1
+            fi
+            echo "✅ $service deployment complete"
+          done
+
+      - name: Monitor post-deployment
+        run: |
+          echo "Monitoring deployment for 10 minutes..."
+          sleep 600
+
+  # Run production smoke tests
+  smoke-tests:
+    name: Run Production Smoke Tests
+    runs-on: ubuntu-latest
+    needs: [deploy-production-100-percent]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Test health endpoints
+        run: |
+          services=("auth-service" "crop-service" "market-service" "climate-service" "govt-service")
+          for service in "${services[@]}"; do
+            echo "Testing $service health endpoint..."
+            response=$(curl -s -o /dev/null -w "%{http_code}" https://krishiai.com/api/v1/$service/health)
+            if [ "$response" != "200" ]; then
+              echo "❌ $service health check failed with status $response"
+              exit 1
+            fi
+            echo "✅ $service health check passed"
+          done
+
+      - name: Test critical user flows
+        run: |
+          echo "Testing authentication flow..."
+          response=$(curl -s -X POST https://krishiai.com/api/v1/auth/send-otp \
+            -H "Content-Type: application/json" \
+            -d '{"phone": "+919999999999"}' \
+            -w "%{http_code}" -o /dev/null)
+          if [ "$response" != "200" ] && [ "$response" != "429" ]; then
+            echo "❌ Authentication test failed with status $response"
+            exit 1
+          fi
+          echo "✅ Authentication test passed"
+
+  # Rollback on failure
+  rollback:
+    name: Rollback Deployment
+    runs-on: ubuntu-latest
+    needs: [deploy-production-10-percent, deploy-production-50-percent, deploy-production-100-percent, smoke-tests]
+    if: failure()
+    steps:
+      - name: Configure kubectl
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG_PRODUCTION }}
+
+      - name: Rollback deployments
+        run: |
+          echo "⚠️ Deployment failed, rolling back..."
+          for service in auth-service crop-service market-service climate-service govt-service; do
+            echo "Rolling back $service..."
+            kubectl rollout undo deployment/${service} -n production
+            kubectl rollout status deployment/${service} -n production --timeout=5m
+            echo "✅ $service rolled back successfully"
+          done
+
+      - name: Verify rollback
+        run: |
+          services=("auth-service" "crop-service" "market-service" "climate-service" "govt-service")
+          for service in "${services[@]}"; do
+            ready_pods=$(kubectl get deployment ${service} -n production -o jsonpath='{.status.readyReplicas}')
+            desired_pods=$(kubectl get deployment ${service} -n production -o jsonpath='{.spec.replicas}')
+            echo "$service: $ready_pods/$desired_pods pods ready after rollback"
+          done
+
+  # Notify deployment status
+  notify:
+    name: Notify Deployment Status
+    runs-on: ubuntu-latest
+    needs: [smoke-tests, rollback]
+    if: always()
+    steps:
+      - name: Determine deployment status
+        id: status
+        run: |
+          if [ "${{ needs.smoke-tests.result }}" == "success" ]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "emoji=✅" >> $GITHUB_OUTPUT
+            echo "message=Production deployment successful" >> $GITHUB_OUTPUT
+          elif [ "${{ needs.rollback.result }}" == "success" ]; then
+            echo "status=rolled_back" >> $GITHUB_OUTPUT
+            echo "emoji=⚠️" >> $GITHUB_OUTPUT
+            echo "message=Production deployment failed and was rolled back" >> $GITHUB_OUTPUT
+          else
+            echo "status=failed" >> $GITHUB_OUTPUT
+            echo "emoji=❌" >> $GITHUB_OUTPUT
+            echo "message=Production deployment failed" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "${{ steps.status.outputs.emoji }} Production Deployment: ${{ steps.status.outputs.message }}",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "${{ steps.status.outputs.emoji }} Production Deployment"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Status:*\n${{ steps.status.outputs.status }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Environment:*\nProduction"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n${{ github.ref_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n<${{ github.event.head_commit.url }}|${{ github.sha }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author:*\n${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*URL:*\n<https://krishiai.com|krishiai.com>"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ steps.status.outputs.message }}"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "Workflow: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Details>"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+      - name: Send email notification on failure
+        if: steps.status.outputs.status != 'success'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "🚨 KrishiAI Production Deployment ${{ steps.status.outputs.status }}"
+          to: ${{ secrets.ALERT_EMAIL }}
+          from: KrishiAI DevOps
+          body: |
+            Production deployment ${{ steps.status.outputs.status }}
+            
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Author: ${{ github.actor }}
+            
+            Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            
+            Please investigate immediately.

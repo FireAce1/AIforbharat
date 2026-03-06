@@ -1,0 +1,243 @@
+{
+  "dashboard": {
+    "title": "KrishiAI - ML Model Performance",
+    "tags": ["krishiai", "ml", "ai", "performance"],
+    "timezone": "browser",
+    "refresh": "30s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "Model Inference Latency",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "model_inference_latency_seconds",
+            "legendFormat": "{{model}} - {{operation}}"
+          }
+        ],
+        "yaxes": [
+          {"label": "Latency (seconds)", "format": "s"},
+          {"show": false}
+        ],
+        "alert": {
+          "conditions": [
+            {
+              "evaluator": {"params": [2.0], "type": "gt"},
+              "operator": {"type": "and"},
+              "query": {"params": ["A", "5m", "now"]},
+              "reducer": {"params": [], "type": "avg"},
+              "type": "query"
+            }
+          ],
+          "executionErrorState": "alerting",
+          "frequency": "1m",
+          "handler": 1,
+          "name": "High ML Inference Latency",
+          "noDataState": "no_data",
+          "notifications": []
+        }
+      },
+      {
+        "id": 2,
+        "title": "Model Accuracy",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "targets": [
+          {
+            "expr": "model_accuracy * 100",
+            "legendFormat": "{{model}}"
+          }
+        ],
+        "yaxes": [
+          {"label": "Accuracy (%)", "format": "percent", "min": 0, "max": 100},
+          {"show": false}
+        ],
+        "thresholds": [
+          {"value": 85, "colorMode": "critical", "op": "lt", "fill": true, "line": true}
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Inference Rate by Model",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+        "targets": [
+          {
+            "expr": "rate(model_inference_total[5m])",
+            "legendFormat": "{{model}}"
+          }
+        ],
+        "yaxes": [
+          {"label": "Inferences/sec", "format": "ops"},
+          {"show": false}
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Model Confidence Distribution",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, rate(model_confidence_bucket[5m]))",
+            "legendFormat": "{{model}} - P50"
+          },
+          {
+            "expr": "histogram_quantile(0.95, rate(model_confidence_bucket[5m]))",
+            "legendFormat": "{{model}} - P95"
+          }
+        ],
+        "yaxes": [
+          {"label": "Confidence", "format": "percentunit", "min": 0, "max": 1},
+          {"show": false}
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Disease Detection Performance",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 16},
+        "targets": [
+          {
+            "expr": "model_inference_latency_seconds{model=\"disease_detector\"}"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value",
+          "unit": "s",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"value": 0, "color": "green"},
+              {"value": 1.5, "color": "yellow"},
+              {"value": 2.0, "color": "red"}
+            ]
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "displayName": "Inference Time"
+          }
+        }
+      },
+      {
+        "id": 6,
+        "title": "Disease Detection Accuracy",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 6, "y": 16},
+        "targets": [
+          {
+            "expr": "model_accuracy{model=\"disease_detector\"} * 100"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value",
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"value": 0, "color": "red"},
+              {"value": 85, "color": "yellow"},
+              {"value": 90, "color": "green"}
+            ]
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "displayName": "Accuracy"
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "Crop Recommender Performance",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 12, "y": 16},
+        "targets": [
+          {
+            "expr": "model_inference_latency_seconds{model=\"crop_recommender\"}"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value",
+          "unit": "s",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"value": 0, "color": "green"},
+              {"value": 0.3, "color": "yellow"},
+              {"value": 0.5, "color": "red"}
+            ]
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "displayName": "Inference Time"
+          }
+        }
+      },
+      {
+        "id": 8,
+        "title": "Crop Recommender Accuracy",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 18, "y": 16},
+        "targets": [
+          {
+            "expr": "model_accuracy{model=\"crop_recommender\"} * 100"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value",
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"value": 0, "color": "red"},
+              {"value": 80, "color": "yellow"},
+              {"value": 85, "color": "green"}
+            ]
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "displayName": "Accuracy"
+          }
+        }
+      },
+      {
+        "id": 9,
+        "title": "Model Errors by Type",
+        "type": "table",
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 20},
+        "targets": [
+          {
+            "expr": "rate(model_errors_total[5m])",
+            "format": "table",
+            "instant": true
+          }
+        ],
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "renameByName": {
+                "model": "Model",
+                "error_type": "Error Type",
+                "Value": "Errors/sec"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
